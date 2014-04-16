@@ -1,0 +1,13 @@
+{% if error %}
+<div class="alert alert-danger alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <strong>Precauci&oacute;n!</strong> {{ error.message }}
+</div>
+{% endif %}
+
+{% if success %}
+<div class="alert alert-success alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <strong>Proceso Aprobado!</strong> {{ success.message }}
+</div>
+{% endif %}

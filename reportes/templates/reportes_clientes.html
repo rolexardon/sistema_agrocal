@@ -1,0 +1,265 @@
+{% extends "main.html" %}
+
+        {% block principal_menu %}
+            <li class="dropdown ">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                    Reportes Productos
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li>
+                        <a href="{% url 'gestion_reporte' %}">
+                            Existencia Productos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'productosvendidos_reporte' %}">
+                            Productos Mas Vendidos
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown active">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                    Reportes Clientes
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li>
+                        <a href="{% url 'clientes_reporte' %}">
+                            Facturas de Clientes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'clientes_debitomain' %}">
+                            Notas de Debito de Clientes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'clientes_creditomain' %}">
+                            Notas de Credito de Clientes
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown ">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                    Reportes Empleados
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li>
+                        <a href="{% url 'vendedores_reporte' %}">
+                            Facturas por Vendedor
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown ">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                    Reportes Proveedores
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li>
+                        <a href="{% url 'proveedorproductos_reporte' %}">
+                            Productos por Proveedor
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        {% endblock %}
+        {% block header %}
+            <div class="page-header">
+                <h1>Reporte Factura Clientes<small></small></h1>
+            </div>
+
+        {% endblock %}
+        {% block content %}
+        {% if user.is_authenticated %}
+            {% include "messages.html" %}
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <span class="row">
+                        <span class="col-lg-12">
+                         <form action="{% url 'clientesfecha_reporte'%}" method="get">
+                        <center>
+                         <table>
+                         <h4>Seleccione una fecha para generar el reporte sobre las ventas de productos:</h4>
+                        <tr>
+                            <td>
+                                Fecha Inicio:
+                            </td>
+                            <td>
+                                Fecha Final:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control"  value="2014-03-30" data-date-format="yyyy-mm-dd" id="dp2" name="fechainicio">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control"  value="2014-03-30" data-date-format="yyyy-mm-dd" id="dp3" name="fechafin">
+                            </td>
+                            <td>
+                            <button type="submit"  class="btn btn-default"><span class="glyphicon glyphicon-list-alt"></span> Generar Reporte</button>
+                            </td>
+                        </tr>
+                        </center>
+                            <!--<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>-->
+
+                            <table class="highchart table" data-graph-container-before="1"  data-graph-type="column" style="display:block" id="testTable" rules="groups" frame="hsides">
+                                <caption>Reporte Factuas Cliente</caption>
+                                <thead>
+                                    <tr>
+                                        <th>Productos</th>
+                                        <th>Facturas</th>
+                                        <th>Total Facturado</th>
+                                    </tr>
+                                 </thead>
+                                 <tbody id="prod">
+                                     {% for pro in clientes %}
+                                     <tr><td>{{ pro.nombre }}</td><td>{{ pro.cantidad_facturas }}</td><td>{{ pro.total_facturado }}</td></tr>
+                                     {% endfor %}
+                                </tbody>
+                            </table>
+                            <input type="button" onclick="tableToExcel('testTable', 'W3C Example Table')" value="Export to Excel">
+
+                        </span>
+                    </span>
+                </div>
+            </div>
+            {% endif %}
+        {% endblock %}
+        {% block js %}
+<script type="text/javascript">
+    var nowTemp = new Date();
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+    var month=nowTemp.getMonth()+1+"";
+    var day =nowTemp.getDate()+"";
+
+    if(month.length==1){
+        month="0"+month;
+        }
+    if(day.length==1){
+        day="0"+day;
+        }
+    $('#dp2').val(nowTemp.getFullYear()+"-"+month+"-"+day);
+    $('#dp3').val(nowTemp.getFullYear()+"-"+month+"-"+day);
+
+
+
+var tableToExcel = (function() {
+  var uri = 'data:application/vnd.ms-excel;base64,'
+    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+    , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
+    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
+  return function(table, name) {
+    if (!table.nodeType) table = document.getElementById(table)
+    var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+    window.location.href = uri + base64(format(template, ctx))
+  }
+})()
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+$('table.highchart')
+  .bind('highchartTable.beforeRender', function(event, highChartConfig) {
+    highChartConfig.colors = ['#59B05D', '#9BC142'];
+  })
+  .highchartTable();
+
+});
+</script>
+
+<script src="/resources/datejs/google-code-prettify/prettify.js"></script>
+<script src="/resources/datejs/jquery.js"></script>
+<script src="/resources/datejs/bootstrap-datepicker.js"></script>
+
+<script src="/resources/js_charts/highcharts.js"></script>
+<script src="/resources/js_charts/modules/exporting.js"></script>
+
+<script src="/resources/js_charts/jquery.highchartTable.js" type="text/javascript"></script>
+
+
+<script>
+
+//CALENDARIO
+
+    if (top.location != location) {
+    top.location.href = document.location.href ;
+  }
+    $(function(){
+        window.prettyPrint && prettyPrint();
+        $('#dp2').datepicker();
+        var startDate = new Date(2012,1,20);
+        var endDate = new Date(2012,1,25);
+
+        // disabling dates
+        var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+        var checkin = $('#dpd1').datepicker({
+          onRender: function(date) {
+            return date.valueOf() < now.valueOf() ? 'disabled' : '';
+          }
+        }).on('changeDate', function(ev) {
+          if (ev.date.valueOf() > checkout.date.valueOf()) {
+            var newDate = new Date(ev.date)
+            newDate.setDate(newDate.getDate() + 1);
+            checkout.setValue(newDate);
+          }
+          checkin.hide();
+          $('#dpd2')[0].focus();
+        }).data('datepicker');
+        var checkout = $('#dpd2').datepicker({
+          onRender: function(date) {
+            return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+          }
+        }).on('changeDate', function(ev) {
+          checkout.hide();
+        }).data('datepicker');
+        });
+
+        $(function(){
+        window.prettyPrint && prettyPrint();
+        $('#dp3').datepicker();
+        var startDate = new Date(2012,1,20);
+        var endDate = new Date(2012,1,25);
+
+        // disabling dates
+        var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+        var checkin = $('#dpd1').datepicker({
+          onRender: function(date) {
+            return date.valueOf() < now.valueOf() ? 'disabled' : '';
+          }
+        }).on('changeDate', function(ev) {
+          if (ev.date.valueOf() > checkout.date.valueOf()) {
+            var newDate = new Date(ev.date)
+            newDate.setDate(newDate.getDate() + 1);
+            checkout.setValue(newDate);
+          }
+          checkin.hide();
+          $('#dpd3')[0].focus();
+        }).data('datepicker');
+        var checkout = $('#dpd3').datepicker({
+          onRender: function(date) {
+            return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+          }
+        }).on('changeDate', function(ev) {
+          checkout.hide();
+        }).data('datepicker');
+        });
+
+
+
+
+
+</script>
+
+  {% endblock %}
+
+

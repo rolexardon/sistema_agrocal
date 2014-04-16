@@ -1,0 +1,89 @@
+{% extends "main.html" %}
+        {% block header %}
+            <div class="page-header">
+                <h1>Gesti&oacute;n Empleados <small></small></h1>
+            </div>
+            <div class="well well-sm">
+                <div class="btn-group">
+                    <a href="{% url 'gestion_empleado' %}"  class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Regresar</a>
+                    </div>
+            </div>
+        {% endblock %}
+        {% block content %}
+            {% include "messages.html" %}
+            <div class="panel panel-default">
+                <div class="panel-body table-responsive">
+                    <span class="">
+                        <span class="col-lg-18">
+                            <table class="table">
+                                 <thead>
+                                     <th colspan="2"><h3>{{ empleado.p_nombre }} {{ empleado.p_apellido }}</h3></th>
+                                </thead>
+                                 <tbody >
+                                        <tr>
+                                            <td colspan="2">
+                                               <p> <b>IDENTIDAD:</b>{{ empleado.identidad }}</p>
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>PRIMER NOMBRE:</b>{{ empleado.p_nombre }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>SEGUNDO NOMBRE:</b>{{ empleado.s_nombre }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>PRIMER APELLIDO:</b> {{ empleado.p_apellido }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>SEGUNDO APELLIDO:</b> {{ empleado.s_apellido }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>GENERO:</b> {{ empleado.genero }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>TIPO EMPLEADO:</b> {{ empleado.tipo }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>FECHA NACIMIENTO:</b> {{ empleado.f_nacimiento }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>ESTADO CIVIL:</b> {{ empleado.e_civil }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <p><b>DIRECCION:</b> {{ empleado.direccion }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>TELEFONO FIJO:</b> {{ empleado.t_fijo }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>TELEFONO MOVIL:</b> {{ empleado.t_movil }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>FECHA CREACION:</b> {{ empleado.fecha_creacion }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>USUARIO CREACION:</b> {{ empleado.usario_creador }}</p>
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                        </span>
+                    </span>
+                </div>
+        {% endblock %}

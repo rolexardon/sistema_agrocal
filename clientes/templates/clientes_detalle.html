@@ -1,0 +1,105 @@
+{% extends "main.html" %}
+        {% block header %}
+            <div class="page-header">
+                <h1>Detalle Clientes <small></small></h1>
+            </div>
+            <div class="well well-sm">
+                <div class="btn-group">
+                    <a href="{% url 'gestion_cliente' %}"  class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Regresar</a>
+                    </div>
+            </div>
+        {% endblock %}
+        {% block content %}
+            {% include "messages.html" %}
+            <div class="panel panel-default">
+                <div class="panel-body table-responsive">
+                    <span class="">
+                        <span class="col-lg-18">
+                            <table class="table">
+                                 <thead>
+                                     <th colspan="2"><h3>{{ cliente.nombre_cliente }}</h3></th>
+                                </thead>
+                                 <tbody >
+                                        <tr>
+                                            <td colspan="2">
+                                               <p> <b>CODIGO:</b>{{ cliente.codigo }}</p>
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>IDENTIDAD:</b>{{ cliente.identidad }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>RTN:</b>{{ cliente.rtn }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>Tel1:</b> {{ cliente.tel1 }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>Tel2:</b> {{ cliente.tel2 }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>Tel3:</b> {{ cliente.tel3 }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>Tel4:</b> {{ cliente.tel4 }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>Tel5:</b> {{ cliente.tel5 }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>Tel6:</b> {{ cliente.tel6 }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>DIRECCION:</b> {{ cliente.direccion }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>TIPO DE VENTA:</b> {{ cliente.tipo }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>CORREO:</b> {{ cliente.correo }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>VENDEDOR:</b> {{ cliente.vendedor }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>CONTACTO:</b> {{ cliente.n_contacto }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>TELEFONO CONTACTO:</b> {{ cliente.tel_contacto }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>LIMITE DE CREDITO:</b> {{ cliente.limite_credito }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>HABILITADO:</b> {{ cliente.habilitado }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <b>FIRMA:</b><p><IMG SRC="/resources/{{ cliente.firma }} " WIDTH=178 HEIGHT=180 BORDER=2 VSPACE=3 HSPACE=3></p>
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                        </span>
+                    </span>
+                </div>
+        {% endblock %}

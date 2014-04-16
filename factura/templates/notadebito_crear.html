@@ -1,0 +1,439 @@
+f{% extends "main.html" %}
+{% block principal_menu %}
+    <li class="dropdown ">
+        <a href="" class="dropdown-toggle" data-toggle="dropdown">
+            Gestion Factura
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li>
+                <a href="{% url 'factura_crear' %}">
+                    Crear Factura
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'gestion_factura' %}">
+                    Buscar Factura
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="dropdown ">
+        <a href="" class="dropdown-toggle" data-toggle="dropdown">
+            Gestion Notas de Credito
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li>
+                <a href="{% url 'credito_crear' %}">
+                    Crear Nota Credito
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'gestion_credito' %}">
+                    Buscar Nota Credito
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="dropdown active">
+        <a href="" class="dropdown-toggle" data-toggle="dropdown">
+            Gestion Notas de Debito
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li>
+                <a href="{% url 'debito_crear' %}">
+                    Crear Nota Debito
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'gestion_debito' %}">
+                    Buscar Nota Debito
+                </a>
+            </li>
+        </ul>
+    </li>
+{% endblock %}
+{% block header %}
+    <div class="page-header">
+        <h1>Crear Nota de Debito <small></small></h1>
+    </div>
+    <div class="well well-sm" style="height: 57px;">
+        <div class="btn-group">
+            <a href="{% url 'gestion_debito' %}"  class="btn btn-default"><span class="glyphicon glyphicon-list-alt"></span> Listar</a>
+        </div>
+
+
+    </div>
+{% endblock %}
+{% block content %}
+    {% include "messages.html" %}
+    <form action="{% url 'debito_crear' %}" method="POST" onsubmit="return validacion()">
+        <div class="panel panel-default">
+            <div class="panel-body table-responsive">
+                <span class="">
+                    <span class="col-lg-18">
+                        <table class="table " id="tabla">
+                            <thead>
+                                {% csrf_token %}
+                                <tr>
+                                    <td style="width:10%;padding-top:40px" align="center">
+
+                                        <img src="/resources/pictures/imagen_barra.jpg" height="100" width="200">
+                                    </td>
+                                    <td align="center" colspan="2" style="width:80%;">
+                                        <h2>AGROCAL</h2><h5>Nota de Debito</h5><h4>Agrocomercial Almendarez, S. de R.L.</h4>
+                                        <p>Residencial Lomas de Toncontin III etapa, Bloque 13,<p>
+                                        <p>Casa #5 Tel. 2234 2218/ 2233 0669/ 2233 0676</p>
+                                        <p>Email:agrocal@cablecolor.hn - www.agrocal1.com</p>
+                                    </td>
+                                    <td style="width:10%;">
+                                        N°:<input type="text" class="form-control" placeholder="Número Nota de Debito" name="numero" id="numero">
+                                    </td>
+
+
+                                </tr>
+                                     <td colspan="4" style="width:100%;">
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="2" style="width:50%;">
+                                        <b>NOMBRE:</b>
+                                        <select id="nombre" type="text" class="form-control" placeholder="Nombre Cliente" name="nombre" onchange="ObtenerFacturas();">
+                                            <option value="SIN NOMBRE" >Seleccione un Cliente</option>
+                                            {% for cli in clientes %}
+                                                <option value="{{cli.nombre_cliente}}">{{cli.nombre_cliente}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    </td>
+                                    <td colspan="2" style="width:50%;">
+
+                                        <b>FECHA:</b>
+                                        <input type="text" class="form-control"  value="2014-03-30" data-date-format="yyyy-mm-dd" id="dp2" name="fecha">
+                                    </td >
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="width:50%;">
+                                        <b>FACTURA:</b>
+
+                                        <select id="factura" type="text" class="form-control" placeholder="Nombre Vendedor" name="vendedor">
+                                            <option value="SIN FACTURA">Sin Factura</option>
+                                        </select>
+                                    </td>
+                                    <td colspan="2" style="width:50%;">
+                                        <b>VENDEDOR:</b>
+                                        <select id="vendedor" type="text" class="form-control" placeholder="Nombre Vendedor" name="vendedor">
+                                            <option value="SIN NOMBRE">Seleccione un Empleado</option>
+                                            {% for emp in empleados %}
+                                                <option value={{emp.p_nombre}}{{emp.p_apellido}}>{{emp.p_nombre}} {{emp.p_apellido}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" colspan="3">
+                                        <b>RAZON 1:</b>
+                                    </td>
+                                    <td align="center" colspan="1">
+                                        <b>Total 1:</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <select id="razon1" type="text" class="form-control" name="razon1">
+                                            <option value="-----------">Seleccione una Razon</option>
+                                            <option value="InteresesError en menos en la facturacion">InteresesError en menos en la facturación</option>
+                                            <option value="Facturacion inferior a la debida">Facturación inferior a la debida</option>
+                                            <option value="Gastos por envios">Gastos por envios</option>
+                                            <option value="Comisiones bancarias">Comisiones bancarias</option>
+
+                                        </select>
+                                    </td>
+                                    <td colspan="1">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;"  type="text" class="form-control" placeholder="0.00" name="subtotal1" id="subtotal1" onchange="ActualizaTotal();">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" colspan="3">
+                                        <b>RAZON 2:</b>
+                                    </td>
+                                    <td align="center" colspan="1">
+                                        <b>Total 2:</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <select id="razon2" type="text" class="form-control" name="razon2">
+                                            <option value="sin razon">Seleccione una Razon</option>
+                                            <option value="InteresesError en menos en la facturacion">InteresesError en menos en la facturación</option>
+                                            <option value="Facturacion inferior a la debida">Facturación inferior a la debida</option>
+                                            <option value="Gastos por envios">Gastos por envios</option>
+                                            <option value="Comisiones bancarias">Comisiones bancarias</option>
+
+                                        </select>
+                                    </td>
+                                    <td colspan="1">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;"  type="text" class="form-control" placeholder="0.00" name="subtotal2" id="subtotal2" onchange="ActualizaTotal();">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td colspan="2" rowspan="2">
+                                        <textarea placeholder="Comentario" class="form-control" name="comentario" rows="2" cols="20" style="height: 85px;"></textarea>
+                                    </td >
+                                    <td align="center">
+                                        <b>TOTAL</b>
+                                    </td>
+                                    <td >
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;background-color: #5B5763;color: #eee;font-size: large;" readonly="readonly" id="total" type="input" class="form-control" name="total" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td >
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                    <button type="submit" class="btn btn-default pull-right"><span class="glyphicon glyphicon-floppy-saved"></span> Guardar</button>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+
+                </span>
+            </span>
+        </div>
+    </form>
+{% endblock %}
+{% block js %}
+
+    <script src="/resources/datejs/google-code-prettify/prettify.js"></script>
+    <script src="/resources/datejs/jquery.js"></script>
+    <script src="/resources/datejs/bootstrap-datepicker.js"></script>
+    <div style="float: right;margin-top: -7px;position: relative;display: block;">
+
+<script>
+//CALENDARIO
+
+
+    var nowTemp = new Date();
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+    var month=nowTemp.getMonth()+1+"";
+    var day =nowTemp.getDate()+"";
+    if(month.length==1){
+        month="0"+month;
+        }
+    if(day.length==1){
+        day="0"+day;
+        }
+    $('#dp2').val(nowTemp.getFullYear()+"-"+month+"-"+day);
+
+    if (top.location != location) {
+    top.location.href = document.location.href ;
+  }
+    $(function(){
+        window.prettyPrint && prettyPrint();
+        $('#dp2').datepicker();
+        var startDate = new Date(2012,1,20);
+        var endDate = new Date(2012,1,25);
+        $('#dp4').datepicker()
+        .on('changeDate', function(ev){
+        if (ev.date.valueOf() > endDate.valueOf()){
+            $('#alert').show().find('strong').text('The start date can not be greater then the end date');
+        } else {
+            $('#alert').hide();
+            startDate = new Date(ev.date);
+            $('#startDate').text($('#dp4').data('date'));
+        }
+        $('#dp4').datepicker('hide');
+        });
+        $('#dp5').datepicker()
+        .on('changeDate', function(ev){
+        if (ev.date.valueOf() < startDate.valueOf()){
+            $('#alert').show().find('strong').text('The end date can not be less then the start date');
+        } else {
+            $('#alert').hide();
+            endDate = new Date(ev.date);
+        $('#endDate').text($('#dp5').data('date'));
+        }
+        $('#dp5').datepicker('hide');
+        });
+
+        // disabling dates
+        var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+        var checkin = $('#dpd1').datepicker({
+          onRender: function(date) {
+            return date.valueOf() < now.valueOf() ? 'disabled' : '';
+          }
+        }).on('changeDate', function(ev) {
+          if (ev.date.valueOf() > checkout.date.valueOf()) {
+            var newDate = new Date(ev.date)
+            newDate.setDate(newDate.getDate() + 1);
+            checkout.setValue(newDate);
+          }
+          checkin.hide();
+          $('#dpd2')[0].focus();
+        }).data('datepicker');
+        var checkout = $('#dpd2').datepicker({
+          onRender: function(date) {
+            return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+          }
+        }).on('changeDate', function(ev) {
+          checkout.hide();
+        }).data('datepicker');
+		});
+
+//AGREGAR SELECT PARA PRECIOS SEGUN PRODUCTOS
+
+
+
+
+function ObtenerValores(id){
+        $("#precio"+id).empty();
+        str='<option value="0" selected>----------</option>';
+        desc=0.00;
+        var producto = '0';
+        if($("#producto"+id).val()){
+            producto = $("#producto"+id).val();}
+        $.ajax({
+            type:"GET",
+            data:{
+                data: "getPrecios",
+                producto: producto,},
+            url:"{%url 'get_ajax' %}",
+            success:function(msg){
+                $.each(msg,	function(key,val){
+                    str+='<option value='+val.precio_min+'>'+val.precio_min+' Lps</option>';
+                    str+='<option value='+val.precio_med+'>'+val.precio_med+' Lps</option>';
+                    str+='<option value='+val.precio_max+'>'+val.precio_max+' Lps</option>';
+                });
+                $("#precio"+id).append(str);}
+        });
+        $.ajax({
+            type:"GET",
+            data:{
+                data: "getDescuento",
+                producto: producto,},
+            url:"{%url 'get_ajax' %}",
+            success:function(msg){
+                $.each(msg,	function(key,val){
+                    if(val.porcentaje_descuento==undefined){
+                    desc=0.00;
+                    }else {
+                        desc=parseFloat(val.porcentaje_descuento);
+                        }
+                });
+                    $("#descuento"+id).val(desc);}
+
+    });
+}
+
+function ObtenerFacturas(){
+        $("#factura").empty();
+        str='<option value="0" selected>Sin Factura </option>';
+
+        var nombre = '';
+        if($("#nombre").val()){
+            nombre = $("#nombre").val();}
+        $.ajax({
+            type:"GET",
+            data:{
+                data: "getFacturas",
+                nombre: nombre,},
+            url:"{%url 'get_ajax' %}",
+            success:function(msg){
+                $.each(msg,	function(key,val){
+                    str+='<option value='+val.numero+'>#'+val.numero+' - '+val.nombre+' - '+parseFloat(val.total).toFixed(2)+'</option>';
+                 });
+                $("#factura").append(str);}
+        });
+    }
+
+//Actualizar total
+
+
+
+    function ActualizaTotal(){
+        var subtotal1=0.00;
+        var subtotal2=0.00;
+        var total=0.00;
+        subtotal1=parseFloat($("#subtotal1").val());
+        subtotal2=parseFloat($("#subtotal2").val());
+        if(isNaN(subtotal1))subtotal1=0.00;
+        if(isNaN(subtotal2))subtotal2=0.00;
+        total=parseFloat(subtotal1+subtotal2).toFixed(2);
+        document.getElementById("subtotal1").value=subtotal1;
+        document.getElementById("subtotal2").value=subtotal2;
+        document.getElementById("total").value=total;
+    }
+
+//VALIDAR FORM
+
+    function validacion(){
+        var numerofactura=$("#numero").val();
+        var vendedor = document.getElementById("vendedor").selectedIndex;
+        var factura = document.getElementById("factura").selectedIndex;
+        var cliente = document.getElementById("nombre").selectedIndex;
+        var razon1 = document.getElementById("razon1").selectedIndex;
+        if( numerofactura==""){
+            alert('Error message: '+"Favor ingresar correctamente el numero de la Nota de Debito");
+            $("form:not(.filter) :input:visible:enabled:first").focus();
+            return false;
+        }
+        if( vendedor == null || vendedor == 0 ) {
+            alert('Error message: '+"Favor seleccionar un vendedor");
+
+             return false;
+        }
+        if( precio == null || precio == 0 ) {
+            alert('Error message: '+"Favor Seleccione una Razon para el Debito");
+
+             return false;
+        }
+         if( cliente == null || cliente == 0 ) {
+            alert('Error message: '+"Favor Seleccione un cliente ");
+
+             return false;
+        }
+         if( factura == null || factura == 0 ) {
+            alert('Error message: '+"Favor Seleccione una Factura");
+
+             return false;
+        }
+    }
+
+</script>
+
+        {% endblock %}
+        {% block style_scripts %}
+        .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+                border: 1px solid #E6E6E6;
+                background: #FDFDFD;
+                font-weight: normal;
+                color: rgb(151, 151, 151);
+            }
+            .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight{
+                border: 1px solid #799DC4;
+                background: #FDFDFD;
+                font-weight: normal;
+                color: rgb(151, 151, 151);
+             }
+            .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+                border: 1px solid #799DC4;
+                background: #799DC4;
+                color: #FFFFFF;
+            }
+            .fila-base{ display: none; } /* fila base oculta */
+        {% endblock %}

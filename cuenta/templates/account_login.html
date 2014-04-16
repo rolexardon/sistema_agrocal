@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+    {% block login %}
+        <span class="row">
+            <span class="col-lg-6">
+                <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+                        <li data-target="#carousel-example-generic" data-slide-to="4"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <img src="/resources/pictures/1.jpg" alt="" style="height:400px;">
+                            <div class="carousel-caption">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="/resources/pictures/2.jpg" alt="" style="height:400px;">
+                            <div class="carousel-caption">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="/resources/pictures/3.jpg" alt="" style="height:400px;">
+                            <div class="carousel-caption">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="/resources/pictures/4.jpg" alt="" style="height:400px;">
+                            <div class="carousel-caption">
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="/resources/pictures/5.jpg" alt="" style="height:400px;">
+                            <div class="carousel-caption">
+                            </div>
+                        </div>
+                    </div>
+                    <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                </div>
+            </span>
+            <span class="col-lg-6">
+                {% include "messages.html" %}
+                <form role="form" method="post" action="{% url 'login_agrocal' %}">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label for="id_user">Usuario</label>
+                    <input type="text" class="form-control" id="id_user" placeholder="Ingrese Usuario" name="user">
+                  </div>
+                  <div class="form-group">
+                    <label for="id_pass">Clave</label>
+                    <input type="password" class="form-control" id="id_pass" placeholder="Ingrese Clave" name="password">
+                  </div>
+                  <button id="saveButton" type="submit" class="btn btn-default">Ingresar</button>
+                </form>
+            </span>
+        </span>
+       {% endblock %}
