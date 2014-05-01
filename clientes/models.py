@@ -14,10 +14,12 @@ class Cliente(models.Model):
         ('SI','SI'),
         ('NO','NO'),
     )
+
     PREFERENCIA=(
         ('SI','SI'),
         ('NO','NO'),
     )
+
     codigo=models.CharField(max_length='125',unique=True, verbose_name=u'Código :')
     identidad = models.CharField(max_length='125',null=True,blank=True, verbose_name=u'Identidad :')
     rnt = models.CharField(max_length='125',null=True,blank=True, verbose_name=u'RTN :')

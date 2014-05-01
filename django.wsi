@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 import os, sys
 sys.path.append('C:/Users/Carlos/Documents/Proyectos/') os.environ['DJANGO_SETTINGS_MODULE'] = 'agrocal.settings'
 import django.core.handlers.wsgi
+=======
+import os, sys
+sys.path.append('C:/Users/Carlos/Documents/Proyectos/') os.environ['DJANGO_SETTINGS_MODULE'] = 'agrocal.settings'
+import django.core.handlers.wsgi
+>>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
 application = django.core.handlers.wsgi.WSGIHandler()

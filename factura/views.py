@@ -35,6 +35,9 @@ def get_ajax(request):
                             data = [{'pk':m.pk,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
                         else:
                             data = [{'pk':m.pk,'precio_pref': ' %s ' % (m.precio_preferencial) ,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
+                    med = Producto.objects.all().filter(habilitado='SI',nombre=query['producto']).order_by('nombre')
+                    data = [{'pk':m.pk,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
+
                     #print(data)
                     return HttpResponse(json.dumps(data), content_type="text/json")
                 except Exception, e:
@@ -189,11 +192,13 @@ def factura_crear(request):
         ddic['total15'] = request.POST.get('total15')
 
         listaproductos=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-        for x in listaproductos:
+        #validar si bodega tiene suficiente
+        """for x in listaproductos:
             for y in ddic['productos']:
                 if y.nombre == ddic['producto'+str(x)]:
                     if int(y.cantidad) < int(ddic['unidades'+str(x)]):
                         errores.append("Las Unidades ("+ddic['unidades'+str(x)]+") facturadas del Producto: "+ddic['producto'+str(x)]+" son mayores a las existentes ("+ str(y.cantidad)+"), Favor ingrese nuevamente los datos")
+        """
         if errores:
             ddic['error'] = {'message':'Se han detectado errores %s' % (errores)}
             return render_to_response('factura_crear.html',ddic,context_instance=RequestContext(request))
@@ -205,8 +210,21 @@ def factura_crear(request):
                 if ddic['producto'+str(x)] !=  "SIN NOMBRE":
                     for y in ddic['productos']:
                         if y.nombre == ddic['producto'+str(x)]:
+
+							#aqui va desconteo
+
                             y.cantidad=y.cantidad-int(ddic['unidades'+str(x)])
                             y.save()
+
+                            #y.cantidad=y.cantidad-int(ddic['unidades'+str(x)])
+                            #y.save()
+
+                            empleado = ddic['vendedor']
+                            producto = y
+
+							
+
+
                     productofactura1=Productos.objects.create(nombreProducto=ddic['producto'+str(x)],unidades=ddic['unidades'+str(x)],precio=ddic['precio'+str(x)],descuento=0,fecha=ddic['fecha'],total=ddic['total'+str(x)])
                     ProductosFactura.objects.create(id_factura=facturas,id_producto=productofactura1)
 

@@ -12,7 +12,6 @@ from clientes.models import Cliente
 from factura.models import NotaDebito,Factura,Impuesto,Productos,ProductosFactura,NotaCredito,ProductosNota,NotaCreditoProductosNota,NotaDebito
 
 
-
 def gestion_proveedor(request):
     ddic = {}
     if not request.user.is_authenticated():
@@ -162,3 +161,6 @@ def ingreso_crear(request):
 
             ddic['success'] = {'message':u'Se ingreso con exito la información.'}
             return render_to_response('ingreso_crear.html',ddic, context_instance=RequestContext(request))
+
+    return render_to_response('proveedores_main.html',ddic,context_instance=RequestContext(request))
+
