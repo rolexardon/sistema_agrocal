@@ -4,6 +4,10 @@ from clientes.models import Cliente
 from producto.models import Producto,PromocionProducto
 from proveedores.models import Proveedor
 from factura.models import Factura,Impuesto,Productos,ProductosFactura,NotaCredito,ProductosNota,NotaCreditoProductosNota
+<<<<<<< HEAD
+=======
+from inventario.models import compra, compra_producto, bodega, producto_transferencia, producto_bodega
+>>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
 
 admin.site.register(Empleado)
 admin.site.register(Cliente)
@@ -18,9 +22,61 @@ admin.site.register(NotaCredito)
 admin.site.register(ProductosNota)
 admin.site.register(NotaCreditoProductosNota)
 
+<<<<<<< HEAD
 from django.db import models
 from django.contrib import admin
 
 
 
 # Register your models here.
+=======
+class CompraProductInline(admin.StackedInline):
+    model = compra_producto
+
+class CompraAdmin(admin.ModelAdmin):
+	list_display = ['orden_compra', 'proveedor','fecha']
+	list_select_related = True
+	inlines = [CompraProductInline]
+    #filter_horizontal = ('producto',)
+    
+class transferenciaAdmin(admin.ModelAdmin):
+    list_display = ('producto','cantidad','bodega_origen','bodega_destino','fecha_creacion','usuario_creador','total_origen','total_destino')
+    
+    def get_form(self, request, obj=None, **kwargs):
+		if obj == None:
+			self.exclude = ("total_origen",'total_destino', )
+		form = super(transferenciaAdmin, self).get_form(request, obj, **kwargs)
+		return form
+		
+class BodegaProductInline(admin.TabularInline):
+    model = producto_bodega
+    exclude = ('transaccion',)
+    extra = 0
+		
+class BodegaAdmin(admin.ModelAdmin):
+	#list_display = ('producto', 'cantidad')
+	inlines = [BodegaProductInline]
+	"""
+	def get_form(self, request, obj=None, **kwargs):
+		print obj
+		if obj == None:
+			self.inline_instances = []
+		form = super(BodegaAdmin, self).get_form(request, obj, **kwargs)
+		return form
+
+	def get_readonly_fields(self, request, obj=None):
+		print obj
+		if obj == None:
+			self.inline_instances = []
+			print '01', self
+			return ()
+		else:
+			print '02', self
+			return ()
+	"""	
+admin.site.register(compra,CompraAdmin)
+admin.site.register(bodega, BodegaAdmin)
+#admin.site.register(bodega)
+admin.site.register(producto_transferencia,transferenciaAdmin)
+
+>>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6

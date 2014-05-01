@@ -15,6 +15,7 @@ class Producto(models.Model):
     codigo=models.CharField(max_length='125',verbose_name=u'Código :',unique=True)
     nombre= models.CharField(max_length='125', verbose_name=u'Nombre Producto:')
     precio_costo=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Costo')
+<<<<<<< HEAD
     precio_preferencial=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Clientes Preferenciales')
     precio_venta_min=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Minimo')
     precio_venta_med=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Medio')
@@ -22,6 +23,14 @@ class Producto(models.Model):
     cantidad = models.IntegerField(verbose_name=u'Cantidad:')
     descripcion=models.TextField(max_length='250', verbose_name=u'Descripción Producto:')
     proveedor=models.ForeignKey(Proveedor)
+=======
+    precio_venta_min=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Minimo')
+    precio_venta_med=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Medio')
+    precio_venta_max=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Maximo')
+    #cantidad = models.IntegerField(verbose_name=u'Cantidad:')
+    descripcion=models.TextField(max_length='250', verbose_name=u'Descripción Producto:')
+    #proveedor=models.ForeignKey(Proveedor)
+>>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
     habilitado = models.CharField(max_length='2', verbose_name=u'Habilitado :', choices = ESTADO)
     usuario_creador = models.ForeignKey(User)
     fecha_creacion = models.DateTimeField(auto_now=True)

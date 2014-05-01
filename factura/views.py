@@ -24,6 +24,7 @@ def get_ajax(request):
                     if request.GET.get('producto','') and request.GET.get('producto','') != '0':
                         query['producto'] = request.GET.get('producto','')
                     print(query['producto'])
+<<<<<<< HEAD
                     if request.GET.get('cliente','') and request.GET.get('producto','') != '0':
                         query['cliente'] = request.GET.get('cliente','')
                     print(query['cliente'])
@@ -35,6 +36,10 @@ def get_ajax(request):
                             data = [{'pk':m.pk,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
                         else:
                             data = [{'pk':m.pk,'precio_pref': ' %s ' % (m.precio_preferencial) ,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
+=======
+                    med = Producto.objects.all().filter(habilitado='SI',nombre=query['producto']).order_by('nombre')
+                    data = [{'pk':m.pk,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
+>>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
                     #print(data)
                     return HttpResponse(json.dumps(data), content_type="text/json")
                 except Exception, e:
@@ -205,6 +210,10 @@ def factura_crear(request):
                 if ddic['producto'+str(x)] !=  "SIN NOMBRE":
                     for y in ddic['productos']:
                         if y.nombre == ddic['producto'+str(x)]:
+<<<<<<< HEAD
+=======
+							#aqui va desconteo
+>>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
                             y.cantidad=y.cantidad-int(ddic['unidades'+str(x)])
                             y.save()
                     productofactura1=Productos.objects.create(nombreProducto=ddic['producto'+str(x)],unidades=ddic['unidades'+str(x)],precio=ddic['precio'+str(x)],descuento=0,fecha=ddic['fecha'],total=ddic['total'+str(x)])

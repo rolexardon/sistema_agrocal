@@ -2,7 +2,11 @@
 # -*- coding: utf8 -*-
 from django import forms
 from django.forms import ModelForm
+<<<<<<< HEAD
 from django.forms.widgets import Select, TextInput, EmailInput, DateInput, Textarea, SelectMultiple
+=======
+from django.forms.widgets import Select, TextInput, DateInput, Textarea, SelectMultiple
+>>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
 
 from empleados.models import Empleado
 

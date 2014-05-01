@@ -14,10 +14,13 @@ class Cliente(models.Model):
         ('SI','SI'),
         ('NO','NO'),
     )
+<<<<<<< HEAD
     PREFERENCIA=(
         ('SI','SI'),
         ('NO','NO'),
     )
+=======
+>>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
     codigo=models.CharField(max_length='125',unique=True, verbose_name=u'Código :')
     identidad = models.CharField(max_length='125',null=True,blank=True, verbose_name=u'Identidad :')
     rnt = models.CharField(max_length='125',null=True,blank=True, verbose_name=u'RTN :')
@@ -36,7 +39,10 @@ class Cliente(models.Model):
     tel_contacto = models.IntegerField(null=True,blank=True, verbose_name=u'Teléfono Contacto:')
     limite_credito=models.DecimalField(null=True,blank=True,max_digits=10,decimal_places=2,verbose_name=u'Limite de Credito')
     habilitado = models.CharField(max_length='2', verbose_name=u'Habilitado :', choices = ESTADO)
+<<<<<<< HEAD
     preferencial = models.CharField(max_length='2', verbose_name=u'Preferencial :', choices = PREFERENCIA)
+=======
+>>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
     firma= models.ImageField(upload_to="imagen_clientes/",null=True,blank=True)
     usuario_creador = models.ForeignKey(User, null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now=True)
