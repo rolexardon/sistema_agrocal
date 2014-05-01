@@ -196,6 +196,7 @@ def factura_crear(request):
                 if ddic['producto'+str(x)] !=  "SIN NOMBRE":
                     for y in ddic['productos']:
                         if y.nombre == ddic['producto'+str(x)]:
+							#aqui va desconteo
                             y.cantidad=y.cantidad-int(ddic['unidades'+str(x)])
                             y.save()
                     productofactura1=Productos.objects.create(nombreProducto=ddic['producto'+str(x)],unidades=ddic['unidades'+str(x)],precio=ddic['precio'+str(x)],descuento=0,fecha=ddic['fecha'],total=ddic['total'+str(x)])
