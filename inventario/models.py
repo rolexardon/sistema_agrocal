@@ -39,7 +39,7 @@ class producto_bodega(models.Model):
 	producto = models.ForeignKey(Producto)
 	bodega = models.ForeignKey(bodega, default = get_bodega_principal)
 	cantidad = models.IntegerField(blank = False,null = False)
-	transaccion = models.IntegerField(default = 3) # para saber si esta añadiendo o modificando la cantidad, 0 es restar, 1 sumar, 3 se reemplaza
+	transaccion = models.IntegerField(default = 2) # para saber si esta añadiendo o modificando la cantidad, 0 es restar, 1 sumar, 2 se reemplaza
 	
 	class Meta:
 		unique_together = ("producto","bodega")
@@ -50,10 +50,10 @@ class producto_bodega(models.Model):
 		#incluir validacion de transaccion
 		if pb:
 			if self.transaccion == 1:
-				pb.update(cantidad = pb[0].cantidad + self.cantidad)
+				pb.update(cantidad = pb[0].cantidad + self.cantidad,transaccion = 2)
 			if self.transaccion == 0:
-				pb.update(cantidad = pb[0].cantidad - self.cantidad)
-			if self.transaccion == 3:
+				pb.update(cantidad = pb[0].cantidad - self.cantidad,transaccion = 2)
+			if self.transaccion == 2:
 				pb.update(cantidad = self.cantidad)
 		else:
 			super(producto_bodega, self).save(*args, **kwargs)

@@ -37,29 +37,34 @@ class transferenciaAdmin(admin.ModelAdmin):
 		form = super(transferenciaAdmin, self).get_form(request, obj, **kwargs)
 		return form
 		
-class BodegaProductInline(admin.StackedInline):
+class BodegaProductInline(admin.TabularInline):
     model = producto_bodega
+    exclude = ('transaccion',)
+    extra = 0
 		
 class BodegaAdmin(admin.ModelAdmin):
 	#list_display = ('producto', 'cantidad')
 	inlines = [BodegaProductInline]
-
+	"""
 	def get_form(self, request, obj=None, **kwargs):
 		print obj
 		if obj == None:
-			self.exclude = ('producto','cantidad','transaccion')
+			self.inline_instances = []
 		form = super(BodegaAdmin, self).get_form(request, obj, **kwargs)
 		return form
-    
+
+	def get_readonly_fields(self, request, obj=None):
+		print obj
+		if obj == None:
+			self.inline_instances = []
+			print '01', self
+			return ()
+		else:
+			print '02', self
+			return ()
+	"""	
 admin.site.register(compra,CompraAdmin)
 admin.site.register(bodega, BodegaAdmin)
 #admin.site.register(bodega)
 admin.site.register(producto_transferencia,transferenciaAdmin)
 
-    
-from django.db import models
-from django.contrib import admin
-
-
-
-# Register your models here.
