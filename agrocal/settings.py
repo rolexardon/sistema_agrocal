@@ -44,10 +44,8 @@ INSTALLED_APPS = (
     'proveedores',
     'reportes',
     'factura',
-<<<<<<< HEAD
-=======
     'inventario',
->>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -109,8 +107,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'agrocal', 'resources')
 MEDIA_URL = '/resources/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'agrocal', 'static')
-<<<<<<< HEAD
+
 STATIC_URL = '/static/'
-=======
-STATIC_URL = '/static/'
->>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
+
