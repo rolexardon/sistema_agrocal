@@ -1,0 +1,65 @@
+{% extends "main.html" %}
+        {% block header %}
+            <div class="page-header">
+                <h1>Detalle Proveedores <small></small></h1>
+            </div>
+            <div class="well well-sm">
+                <div class="btn-group">
+                    <a href="{% url 'gestion_proveedor' %}"  class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Regresar</a>
+                    </div>
+            </div>
+        {% endblock %}
+        {% block content %}
+            {% include "messages.html" %}
+            <div class="panel panel-default">
+                <div class="panel-body table-responsive">
+                    <span class="">
+                        <span class="col-lg-18">
+                            <table class="table">
+                                 <thead>
+                                     <th colspan="2"><h3>{{ proveedor.nombre }}</h3></th>
+                                </thead>
+                                 <tbody >
+                                        <tr>
+                                            <td colspan="2">
+                                               <p> <b>CODIGO :</b>{{ proveedor.codigo }}</p>
+                                            </td>
+                                            <td>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>NOMBRE :</b>{{ proveedor.nombre }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>TELEFONO :</b>{{ proveedor.tel_proveedor }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>NOMBRE CONTACTO :</b> {{ proveedor.n_contacto }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>TELEFONO CONTACTO :</b> {{ proveedor.tel_contacto }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <p><b>DIRECCION :</b> {{ proveedor.direccion }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>PAIS :</b> {{ proveedor.pais }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>CREDITO :</b> {{ proveedor.credito }}</p>
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                        </span>
+                    </span>
+                </div>
+        {% endblock %}

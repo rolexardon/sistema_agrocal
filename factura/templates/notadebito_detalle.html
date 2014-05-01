@@ -1,0 +1,187 @@
+{% extends "main.html" %}
+{% block principal_menu %}
+    <li class="dropdown ">
+        <a href="" class="dropdown-toggle" data-toggle="dropdown">
+            Gestion Factura
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li>
+                <a href="{% url 'factura_crear' %}">
+                    Crear Factura
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'gestion_factura' %}">
+                    Buscar Factura
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="dropdown ">
+        <a href="" class="dropdown-toggle" data-toggle="dropdown">
+            Gestion Notas de Credito
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li>
+                <a href="{% url 'credito_crear' %}">
+                    Crear Nota Credito
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'gestion_credito' %}">
+                    Buscar Nota Credito
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="dropdown active">
+        <a href="" class="dropdown-toggle" data-toggle="dropdown">
+            Gestion Notas de Debito
+            <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+            <li>
+                <a href="{% url 'debito_crear' %}">
+                    Crear Nota Debito
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'gestion_debito' %}">
+                    Buscar Nota Debito
+                </a>
+            </li>
+        </ul>
+    </li>
+{% endblock %}
+{% block header %}
+    <div class="page-header">
+        <h1>Buscar Notas Debito <small></small></h1>
+    </div>
+    <div class="well well-sm" style="height: 57px;">
+        <div class="btn-group">
+            <a href="{% url 'gestion_debito' %}"  class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Regresar</a>
+            <a class="btn btn-default" id="imprime"><span class="glyphicon glyphicon-print"></span> Imprimir</a>
+        </div>
+
+
+    </div>
+{% endblock %}
+{% block content %}
+
+{% include "messages.html" %}
+    <div class="panel panel-default">
+        <div class="panel-body table-responsive all" id="Retain">
+            <span class="">
+                <span class="col-lg-18" >
+                    <table class="table ">
+                        <thead>
+                        </thead>
+                        <tbody>
+                                <tr>
+                                    <td style="width:10%;padding-top:40px">
+                                        <img src="/resources/pictures/imagen_barra.jpg" height="80" width="150">
+                                    </td>
+                                    <td align="center" colspan="2" style="width:80%;">
+                                        <h2>AGROCAL</h2><h5>Nota de Debito<h4>Agrocomercial Almendarez, S. de R.L.</h4>
+                                        <p>Residencial Lomas de Toncontin III etapa, Bloque 13,<p>
+                                        <p>Casa #5 Tel. 2234 2218/ 2233 0669/ 2233 0676</p>
+                                        <p>Email:agrocal@cablecolor.hn - www.agrocal1.com</p>
+                                        <p>RTN 08019002268666</p>
+                                    </td>
+                                    <td align="right" style="width:25%;">
+                                        N°:{{ nota.numero}}
+                                    </td>
+
+
+                                </tr>
+                                     <td colspan="4" style="width:100%;">
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="2" style="width:50%;">
+                                        <b>NOMBRE:</b> {{ nota.nombre }}
+                                    </td>
+                                    <td colspan="2" style="width:50%;">
+                                        <b>FECHA:</b> {{ nota.fecha_creacion }}
+                                    </td >
+
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="width:50%;">
+                                        <b>FACTURA:</b> {{ nota.vendedor }}
+                                    </td>
+                                    <td colspan="2" style="width:50%;">
+                                        <b>VENDEDOR:</b> {{ nota.vendedor }}
+                                    </td >
+
+                                </tr>
+                                <tr>
+                                    <td align="center" colspan="2" style="width:75%;">
+                                        <b>RAZON </b>
+                                    </td >
+                                    <td align="center" colspan="2" style="width:25%;">
+                                        <b>TOTAL</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" colspan="2">
+                                        {{ nota.razon1 }}
+                                    </td >
+                                    <td align="center" colspan="2">
+                                        {{ nota.subtotal1|floatformat:2 }} Lps.
+                                    </td>
+                                </tr>
+                                    <td align="center" colspan="2">
+                                        {{ nota.razon2 }}
+                                    </td >
+                                    <td align="center" colspan="2">
+                                        {{ nota.subtotal2|floatformat:2 }} Lps.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" colspan="4">
+                                            <b>COMENTARIO </b> {{nota.comentario}}
+                                    </td >
+                                </tr>
+                                <tr>
+                                    <td align="center" colspan="1">
+                                    </td >
+                                    <td align="center">
+                                        <b>TOTAL: </b>
+                                    </td>
+                                    <td align="center" colspan="2">
+                                        <b>{{ nota.total|floatformat:2 }} Lps.</b>
+                                    </td >
+                                </tr>
+                        </tbody>
+                    </table>
+                </span>
+            </span>
+        </div>
+{% endblock %}
+{% block js %}
+<script src="/resources/jquery-1.10.2.js"></script>
+<script src="/resources/jquery-ui-1.10.4.custom.js"></script>
+<script src="/resources/jquery.PrintArea.js"></script>
+<script>
+$(document).ready(function(){
+
+var dialog = $("div.testDialog").dialog({position : { my : "left top", at : "left bottom+50", of : ".SettingsBox" }, width: "600", title: "Print Dialog Box Contents"});
+
+
+
+$("#imprime").click(function(){
+
+    var headElements = $("input#addElements").is(":checked") ? '<meta charset="utf-8" />,<meta http-equiv="X-UA-Compatible" content="IE=edge"/>' : '';
+    var options = { mode : 'iframe', popClose : 'false', '' : '', retainAttr : 'on', extraHead : headElements };
+    $( "div.all" ).printArea( options );
+});
+
+});
+
+  </script>
+{% endblock %}

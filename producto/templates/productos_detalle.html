@@ -1,0 +1,79 @@
+{% extends "main.html" %}
+        {% block principal_menu %}
+            <li class="active">
+                <a href="{% url 'gestion_producto' %}" class="dropdown-toggle" >
+                    Productos
+                </a>
+            </li>
+            <li class="">
+                <a href="{% url 'gestion_promocion' %}" class="dropdown-toggle" >
+                     Promociones
+                </a>
+            </li>
+        {% endblock%}
+        {% block header %}
+            <div class="page-header">
+                <h1>Detalle Producto <small></small></h1>
+            </div>
+            <div class="well well-sm">
+                <div class="btn-group">
+                    <a href="{% url 'gestion_producto' %}"  class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span> Regresar</a>
+                    </div>
+            </div>
+        {% endblock %}
+        {% block content %}
+            {% include "messages.html" %}
+            <div class="panel panel-default">
+                <div class="panel-body table-responsive">
+                    <span class="">
+                        <span class="col-lg-18">
+                            <table class="table">
+                                 <thead>
+                                     <th colspan="2"><h3>{{ producto.nombre }}</h3></th>
+                                </thead>
+                                 <tbody >
+                                        <tr>
+                                            <td colspan="2" >
+                                                <p><b>CODIGO : </b>{{producto.codigo}}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                               <p> <b>IMAGEN : </b><IMG SRC="/resources/{{ producto.imagen }}" WIDTH=278 HEIGHT=280></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>PRECIO VENTA MINIMO : </b>{{ producto.precio_venta_min|floatformat:2 }} Lps.</p>
+                                            </td>
+                                            <td>
+                                                <p><b>PRECIO VENTA MEDIO : </b>{{ producto.precio_venta_med|floatformat:2 }} Lps.</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>PRECIO VENTA MAXIMO : </b>{{ producto.precio_venta_max|floatformat:2 }} Lps.</p>
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">
+                                                <p><b>DESCRIPCION : </b> {{ producto.descripcion}}</p>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p><b>EXISTENCIAS : </b> {{ producto.cantidad }}</p>
+                                            </td>
+                                            <td>
+                                                <p><b>PROVEEDOR : </b> {{ producto.proveedor.nombre }}</p>
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                        </span>
+                    </span>
+                </div>
+        {% endblock %}

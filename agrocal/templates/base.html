@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AGROCOMERCIAL ALMENDAREZ</title>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href= "/resources/css/bootstrap.min.css" rel="stylesheet">
+        <link href= "/resources/css/bootstrap-theme.min.css" rel="stylesheet">
+        <link href= "/resources/css/carousel.css" rel="stylesheet">
+        <link href= "/resources/css/datepicker.css" rel="stylesheet">
+    <link href= "/resources/css/jquery-ui-1.9.2.custom.min.css" rel="stylesheet">
+
+        <link rel="icon" type="image/png" href="/resources/pictures/favicon.ico" />
+        <style type="text/css">
+            .container_own
+            {
+
+                margin-right: auto;
+                margin-left: auto;
+                padding-left: 15px;
+                padding: 15px;
+            }
+
+            {% block style_scripts %}
+            {% endblock %}
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-static-top navbar-fixed-top navbar-default navbar-static-top" role="navigation">
+            <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url 'main' %}">Inicio</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        {% block principal_menu %}
+                        {% endblock %}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            {% if user.is_authenticated %}
+                                <p class="navbar-text"> <a href="{% url 'logout_agrocal' %}" class="navbar-link">Cerrar Sesi&oacute;n {{ user }}    </a></p>
+                            {% endif %}
+                        </li>
+                        <li>
+                            <img src="/resources/pictures/imagen_barra.png" style="height:30px;margin-top: 10px;"</img>
+                        </li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+
+
+        <!--div class="container_own"-->
+        <div class="container">
+            {% block login %}
+            {% endblock %}
+            {% block header %}
+            {% endblock %}
+            {% block content %}
+            {% endblock %}
+        </div>
+		
+        <script src="/resources/js/jquery.min.js"></script>
+        <script src="/resources/js/jquery-ui-1.9.2.custom.min.js"></script>
+        <script src="/resources/js/bootstrap.min.js"></script>
+        <script src="/resources/js/carousel.js"></script>
+        <script src="/resources/js/jquery.ui.timepicker.js"></script>
+		
+        {% block js %}
+        {% endblock %}
+		
+        <script type="text/javascript">
+			
+            $(document).ready(function(){
+               /* $('.carousel').carousel();*/
+
+            })
+
+        </script>
+    </body>
+</html>

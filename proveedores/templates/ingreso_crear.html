@@ -1,0 +1,960 @@
+f{% extends "main.html" %}
+{% block principal_menu %}
+            <li class="dropdown">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                    Gestion Proveedores
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li>
+                        <a href="{% url 'factura_crear' %}">
+                            Buscar Proveedores
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown active">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                    Ingresos Compras
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li>
+                        <a href="{% url 'ingreso_crear' %}">
+                            Ingresar Factura
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'gestion_credito' %}">
+                            Buscar Factura
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        {% endblock %}
+{% block header %}
+    <div class="page-header">
+        <h1>Ingresar Compra <small></small></h1>
+    </div>
+    <div class="well well-sm" style="height: 57px;">
+        <div class="btn-group">
+            <a href="{% url 'gestion_credito' %}"  class="btn btn-default"><span class="glyphicon glyphicon-list-alt"></span> Listar</a>
+        </div>
+
+
+    </div>
+{% endblock %}
+{% block content %}
+    {% include "messages.html" %}
+    <form action="{% url 'credito_crear' %}" method="POST" onsubmit="return validacion()">
+        <div class="panel panel-default">
+            <div class="panel-body table-responsive">
+                <span class="">
+                    <span class="col-lg-18">
+                        <table class="table " id="tabla">
+                            <thead>
+                                {% csrf_token %}
+                                <tr>
+                                    <td style="width:10%;padding-top:40px" align="center">
+
+                                        <img src="/resources/pictures/imagen_barra.jpg" height="100" width="200">
+                                    </td>
+                                    <td align="center" colspan="2" style="width:80%;">
+                                        <h2>AGROCAL</h2><h5>Nota de Credito</h5><h4>Agrocomercial Almendarez, S. de R.L.</h4>
+                                        <p>Residencial Lomas de Toncontin III etapa, Bloque 13,<p>
+                                        <p>Casa #5 Tel. 2234 2218/ 2233 0669/ 2233 0676</p>
+                                        <p>Email:agrocal@cablecolor.hn - www.agrocal1.com</p>
+                                    </td>
+                                    <td style="width:10%;">
+                                        N°:<input type="text" class="form-control" placeholder="Número Nota de Credito" name="numero" id="numero">
+                                    </td>
+
+
+                                </tr>
+                                     <td colspan="4" style="width:100%;">
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="2" style="width:50%;">
+                                        <b>NOMBRE:</b>
+                                        <select id="nombre" type="text" class="form-control" placeholder="Nombre Cliente" name="nombre" onchange="ObtenerFacturas();">
+                                            <option value="SIN NOMBRE" >Seleccione un Cliente</option>
+                                            {% for cli in clientes %}
+                                                <option value="{{cli.nombre_cliente}}">{{cli.nombre_cliente}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    </td>
+                                    <td colspan="2" style="width:50%;">
+
+                                        <b>FECHA:</b>
+                                        <input type="text" class="form-control"  value="2014-03-30" data-date-format="yyyy-mm-dd" id="dp2" name="fecha">
+                                    </td >
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="width:50%;">
+                                        <b>FACTURA:</b>
+
+                                        <select id="factura" type="text" class="form-control" placeholder="Nombre Vendedor" name="vendedor">
+                                            <option value="SIN FACTURA">Sin Factura</option>
+                                        </select>
+                                    </td>
+                                    <td colspan="2" style="width:50%;">
+                                        <b>VENDEDOR:</b>
+                                        <select id="vendedor" type="text" class="form-control" placeholder="Nombre Vendedor" name="vendedor">
+                                            <option value="SIN NOMBRE">Seleccione un Empleado</option>
+                                            {% for emp in empleados %}
+                                                <option value={{emp.p_nombre}}{{emp.p_apellido}}>{{emp.p_nombre}} {{emp.p_apellido}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    </td>
+
+
+                                </tr>
+
+
+                                <tr>
+                                    <td align="center" ">
+                                        <b>UNIDADES</b>
+                                    </td>
+                                    <td align="center" >
+                                        <b>DESCRIPCION</b>
+                                    </td >
+                                    <td align="center" >
+                                        <b>PRECIO UNITARIO</b>
+                                    </td>
+                                    <td align="center" >
+                                        <b>TOTAL</b>
+                                    </td >
+                                </tr>
+                                <!--FILA PARA PRODUCTO 1 -->
+                                <tr id="filaproducto1" >
+                                    <td align="center">
+                                        <input id="unidades1" type="text" class="form-control" placeholder="Unidades" name="unidades1" onchange="ActualizaPrecio('1');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto1" type="text" class="form-control" placeholder="Producto" name="producto1" onchange="ActualizaPrecio('1');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio1" id="precio1" onchange="ActualizaPrecio(1);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento1" type="input" class="form-control" placeholder="Descuento" name="descuento1" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total1" type="input" class="form-control" placeholder="Total" name="total1" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 2" -->
+                                <tr id="filaproducto2"  style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades2" type="text" class="form-control" placeholder="Unidades" name="unidades2" onchange="ActualizaPrecio('2');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto2" type="text" class="form-control" placeholder="Producto" name="producto2" onchange="ActualizaPrecio('2');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio2" id="precio2" onchange="ActualizaPrecio(2);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento2" type="input" class="form-control" placeholder="Descuento" name="descuento2" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total2" type="input" class="form-control" placeholder="Total" name="total2" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 3" -->
+                                <tr id="filaproducto3" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades3" type="text" class="form-control" placeholder="Unidades" name="unidades3" onchange="ActualizaPrecio('3');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto3" type="text" class="form-control" placeholder="Producto" name="producto3" onchange="ActualizaPrecio('3');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio3" id="precio3" onchange="ActualizaPrecio(3);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento3" type="input" class="form-control" placeholder="Descuento" name="descuento3" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total3" type="input" class="form-control" placeholder="Total" name="total3" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 4" -->
+                                <tr id="filaproducto4" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades4" type="text" class="form-control" placeholder="Unidades" name="unidades4" onchange="ActualizaPrecio('4');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto4" type="text" class="form-control" placeholder="Producto" name="producto4" onchange="ActualizaPrecio('4');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio4" id="precio4" onchange="ActualizaPrecio(4);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento4" type="input" class="form-control" placeholder="Descuento" name="descuento4" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total4" type="input" class="form-control" placeholder="Total" name="total4" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!--FILA PARA PRODUCTO 5" -->
+                                <tr id="filaproducto5" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades5" type="text" class="form-control" placeholder="Unidades" name="unidades5" onchange="ActualizaPrecio('5');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto5" type="text" class="form-control" placeholder="Producto" name="producto5" onchange="ActualizaPrecio('5');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio5" id="precio5" onchange="ActualizaPrecio(5);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento5" type="input" class="form-control" placeholder="Descuento" name="descuento5" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total5" type="input" class="form-control" placeholder="Total" name="total5" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 6" -->
+                                <tr id="filaproducto6" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades6" type="text" class="form-control" placeholder="Unidades" name="unidades6" onchange="ActualizaPrecio('6');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto6" type="text" class="form-control" placeholder="Producto" name="producto6" onchange="ActualizaPrecio('6');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio6" id="precio6" onchange="ActualizaPrecio(6);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;" >
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento6" type="input" class="form-control" placeholder="Descuento" name="descuento6" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total6" type="input" class="form-control" placeholder="Total" name="total6" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 7" -->
+                                <tr id="filaproducto7" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades7" type="text" class="form-control" placeholder="Unidades" name="unidades7" onchange="ActualizaPrecio('7');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto7" type="text" class="form-control" placeholder="Producto" name="producto7" onchange="ActualizaPrecio('7')">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio7" id="precio7" onchange="ActualizaPrecio(7);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento7" type="input" class="form-control" placeholder="Descuento" name="descuento7" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total7" type="input" class="form-control" placeholder="Total" name="total7" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 8" -->
+                                <tr id="filaproducto8" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades8" type="text" class="form-control" placeholder="Unidades" name="unidades8" onchange="ActualizaPrecio('8');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto8" type="text" class="form-control" placeholder="Producto" name="producto8" onchange="ActualizaPrecio('8');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio8" id="precio8" onchange="ActualizaPrecio(8);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento8" type="input" class="form-control" placeholder="Descuento" name="descuento8" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total8" type="input" class="form-control" placeholder="Total" name="total8" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 9" -->
+                                <tr id="filaproducto9" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades9" type="text" class="form-control" placeholder="Unidades" name="unidades9" onchange="ActualizaPrecio('9');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto9" type="text" class="form-control" placeholder="Producto" name="producto9" onchange="ActualizaPrecio('9');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio9" id="precio9" onchange="ActualizaPrecio(9);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento9" type="input" class="form-control" placeholder="Descuento" name="descuento9" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total9" type="input" class="form-control" placeholder="Total" name="total9" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 10" -->
+                                <tr id="filaproducto10" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades10" type="text" class="form-control" placeholder="Unidades" name="unidades10" onchange="ActualizaPrecio('10');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto10" type="text" class="form-control" placeholder="Producto" name="producto10" onchange="ActualizaPrecio('10');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio10" id="precio10" onchange="ActualizaPrecio(10);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento10" type="input" class="form-control" placeholder="Descuento" name="descuento10" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total10" type="input" class="form-control" placeholder="Total" name="total10" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 11" -->
+                                <tr id="filaproducto11" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades11" type="text" class="form-control" placeholder="Unidades" name="unidades11" onchange="ActualizaPrecio('11');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto11" type="text" class="form-control" placeholder="Producto" name="producto11" onchange="ActualizaPrecio('11');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio11" id="precio11" onchange="ActualizaPrecio(11);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento11" type="input" class="form-control" placeholder="Descuento" name="descuento11" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total11" type="input" class="form-control" placeholder="Total" name="total11" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 12" -->
+                                <tr id="filaproducto12" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades12" type="text" class="form-control" placeholder="Unidades" name="unidades12" onchange="ActualizaPrecio('12');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto12" type="text" class="form-control" placeholder="Producto" name="producto12" onchange="ActualizaPrecio('12');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio12" id="precio12" onchange="ActualizaPrecio(12);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento12" type="input" class="form-control" placeholder="Descuento" name="descuento12" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total12" type="input" class="form-control" placeholder="Total" name="total12" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 13" -->
+                                <tr id="filaproducto13" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades13" type="text" class="form-control" placeholder="Unidades" name="unidades13" onchange="ActualizaPrecio('13');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto13" type="text" class="form-control" placeholder="Producto" name="producto13" onchange="ActualizaPrecio('13');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio13" id="precio13" onchange="ActualizaPrecio(13);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento13" type="input" class="form-control" placeholder="Descuento" name="descuento13" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total13" type="input" class="form-control" placeholder="Total" name="total13" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 14" -->
+                                <tr id="filaproducto14" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades14" type="text" class="form-control" placeholder="Unidades" name="unidades14" onchange="ActualizaPrecio('14');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto14" type="text" class="form-control" placeholder="Producto" name="producto14" onchange="ActualizaPrecio('14');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio14" id="precio14" onchange="ActualizaPrecio(14);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento14" type="input" class="form-control" placeholder="Descuento" name="descuento14" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total14" type="input" class="form-control" placeholder="Total" name="total14" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--FILA PARA PRODUCTO 15" -->
+                                <tr id="filaproducto15" style="display:none;">
+                                    <td align="center">
+                                        <input id="unidades15" type="text" class="form-control" placeholder="Unidades" name="unidades15" onchange="ActualizaPrecio('15');" value="1">
+                                    </td>
+                                    <td align="center">
+                                       <select id="producto15" type="text" class="form-control" placeholder="Producto" name="producto15" onchange="ActualizaPrecio('15');">
+                                            <option value="SIN NOMBRE">Seleccione un Producto</option>
+                                            {% for pro in productos %}
+                                                <option value="{{pro.nombre}}">{{pro.nombre}}</option>
+                                            {%endfor%}
+                                        </select>
+                                    <td align="center">
+                                       <input style="width: 100px;"  type="text" class="form-control" placeholder="0.00" name="precio15" id="precio15" onchange="ActualizaPrecio(15);">
+                                    </td>
+                                    <!--descuento-->
+                                    <td align="center" style="display:none;">
+                                        <div style="with: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="descuento15" type="input" class="form-control" placeholder="Descuento" name="descuento15" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+
+                                    <td align="center">
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="total15" type="input" class="form-control" placeholder="Total" name="total15" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td>
+                                </tr>
+
+
+
+
+
+
+
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td align="" colspan="2">
+                                        <a class="btn btn-success btn-xs" id="agregar"><span class="glyphicon glyphicon-plus"></span> Agregar Producto</a>
+                                    </td >
+                                    <td align="center">
+                                        <b>SUBTOTAL</b>
+                                    </td>
+                                    <td >
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;" readonly="readonly" id="subtotal" type="input" class="form-control" name="subtotal" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td >
+                                </tr>
+                                <tr>
+                                    <td colspan="2" rowspan="2">
+                                        <textarea placeholder="Comentario" class="form-control" name="comentario" rows="2" cols="20" style="height: 85px;"></textarea>
+                                    </td >
+                                    <td align="center">
+                                        <b>TOTAL: </b>
+                                    </td>
+                                    <td >
+                                        <div style="width: 150px;">
+                                            <input style="width: 100px; float: left;background-color: #5B5763;color: #eee;font-size: large;" readonly="readonly" id="total" type="input" class="form-control" name="total" value="0.00">
+                                            <span style="float: right; padding:6px 12px;">Lps</span>
+                                        </div>
+                                    </td >
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                    <button type="submit" class="btn btn-default pull-right"><span class="glyphicon glyphicon-floppy-saved"></span> Guardar</button>
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+
+                </span>
+            </span>
+        </div>
+    </form>
+{% endblock %}
+{% block js %}
+
+    <script src="/resources/datejs/google-code-prettify/prettify.js"></script>
+    <script src="/resources/datejs/jquery.js"></script>
+    <script src="/resources/datejs/bootstrap-datepicker.js"></script>
+    <div style="float: right;margin-top: -7px;position: relative;display: block;">
+
+<script>
+//CALENDARIO
+
+
+    var nowTemp = new Date();
+    var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+    var month=nowTemp.getMonth()+1+"";
+    var day =nowTemp.getDate()+"";
+    if(month.length==1){
+        month="0"+month;
+        }
+    if(day.length==1){
+        day="0"+day;
+        }
+    $('#dp2').val(nowTemp.getFullYear()+"-"+month+"-"+day);
+
+    if (top.location != location) {
+    top.location.href = document.location.href ;
+  }
+    $(function(){
+        window.prettyPrint && prettyPrint();
+        $('#dp2').datepicker();
+        var startDate = new Date(2012,1,20);
+        var endDate = new Date(2012,1,25);
+        $('#dp4').datepicker()
+        .on('changeDate', function(ev){
+        if (ev.date.valueOf() > endDate.valueOf()){
+            $('#alert').show().find('strong').text('The start date can not be greater then the end date');
+        } else {
+            $('#alert').hide();
+            startDate = new Date(ev.date);
+            $('#startDate').text($('#dp4').data('date'));
+        }
+        $('#dp4').datepicker('hide');
+        });
+        $('#dp5').datepicker()
+        .on('changeDate', function(ev){
+        if (ev.date.valueOf() < startDate.valueOf()){
+            $('#alert').show().find('strong').text('The end date can not be less then the start date');
+        } else {
+            $('#alert').hide();
+            endDate = new Date(ev.date);
+        $('#endDate').text($('#dp5').data('date'));
+        }
+        $('#dp5').datepicker('hide');
+        });
+
+        // disabling dates
+        var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+        var checkin = $('#dpd1').datepicker({
+          onRender: function(date) {
+            return date.valueOf() < now.valueOf() ? 'disabled' : '';
+          }
+        }).on('changeDate', function(ev) {
+          if (ev.date.valueOf() > checkout.date.valueOf()) {
+            var newDate = new Date(ev.date)
+            newDate.setDate(newDate.getDate() + 1);
+            checkout.setValue(newDate);
+          }
+          checkin.hide();
+          $('#dpd2')[0].focus();
+        }).data('datepicker');
+        var checkout = $('#dpd2').datepicker({
+          onRender: function(date) {
+            return date.valueOf() <= checkin.date.valueOf() ? 'disabled' : '';
+          }
+        }).on('changeDate', function(ev) {
+          checkout.hide();
+        }).data('datepicker');
+		});
+
+//AGREGAR SELECT PARA PRECIOS SEGUN PRODUCTOS
+
+
+
+
+function ObtenerValores(id){
+        $("#precio"+id).empty();
+        str='<option value="0" selected>----------</option>';
+        desc=0.00;
+        var producto = '0';
+        if($("#producto"+id).val()){
+            producto = $("#producto"+id).val();}
+        $.ajax({
+            type:"GET",
+            data:{
+                data: "getPrecios",
+                producto: producto,},
+            url:"{%url 'get_ajax' %}",
+            success:function(msg){
+                $.each(msg,	function(key,val){
+                    str+='<option value='+val.precio_min+'>'+val.precio_min+' Lps</option>';
+                    str+='<option value='+val.precio_med+'>'+val.precio_med+' Lps</option>';
+                    str+='<option value='+val.precio_max+'>'+val.precio_max+' Lps</option>';
+                });
+                $("#precio"+id).append(str);}
+        });
+        $.ajax({
+            type:"GET",
+            data:{
+                data: "getDescuento",
+                producto: producto,},
+            url:"{%url 'get_ajax' %}",
+            success:function(msg){
+                $.each(msg,	function(key,val){
+                    if(val.porcentaje_descuento==undefined){
+                    desc=0.00;
+                    }else {
+                        desc=parseFloat(val.porcentaje_descuento);
+                        }
+                });
+                    $("#descuento"+id).val(desc);}
+
+    });
+}
+
+function ObtenerFacturas(){
+        $("#factura").empty();
+        str='<option value="0" selected>Sin Factura </option>';
+
+        var nombre = '';
+        if($("#nombre").val()){
+            nombre = $("#nombre").val();}
+        $.ajax({
+            type:"GET",
+            data:{
+                data: "getFacturas",
+                nombre: nombre,},
+            url:"{%url 'get_ajax' %}",
+            success:function(msg){
+                $.each(msg,	function(key,val){
+                    str+='<option value='+val.numero+'>#'+val.numero+' - '+val.nombre+' - '+parseFloat(val.total).toFixed(2)+'</option>';
+                 });
+                $("#factura").append(str);}
+        });
+    }
+
+
+
+
+
+
+
+    $("#agregar").click(function(){
+        var elemento2 = document.getElementById("filaproducto2");
+        var elemento3 = document.getElementById("filaproducto3");
+        var elemento4 = document.getElementById("filaproducto4");
+        var elemento5 = document.getElementById("filaproducto5");
+        var elemento6 = document.getElementById("filaproducto6");
+        var elemento7 = document.getElementById("filaproducto7");
+        var elemento8 = document.getElementById("filaproducto8");
+        var elemento9 = document.getElementById("filaproducto9");
+        var elemento10 = document.getElementById("filaproducto10");
+        var elemento11 = document.getElementById("filaproducto11");
+        var elemento12 = document.getElementById("filaproducto12");
+        var elemento13 = document.getElementById("filaproducto13");
+        var elemento14 = document.getElementById("filaproducto14");
+        var elemento15 = document.getElementById("filaproducto15");
+
+        if(elemento2.style.display=='none'){
+            visible_div("filaproducto2")
+        }else{
+            if(elemento3.style.display=='none'){
+                visible_div("filaproducto3")
+            }else{
+                if(elemento4.style.display=='none'){
+                    visible_div("filaproducto4")
+                }else{
+                    if(elemento5.style.display=='none'){
+                        visible_div("filaproducto5")
+                        }else{
+                            if(elemento6.style.display=='none'){
+                                visible_div("filaproducto6")
+                            }else{
+                                if(elemento7.style.display=='none'){
+                                    visible_div("filaproducto7")
+                                }else{
+                                    if(elemento8.style.display=='none'){
+                                        visible_div("filaproducto8")
+                                    }else{
+                                        if(elemento9.style.display=='none'){
+                                            visible_div("filaproducto9")
+                                        }else{
+                                            if(elemento10.style.display=='none'){
+                                                visible_div("filaproducto10")
+                                            }else{
+                                                if(elemento11.style.display=='none'){
+                                                    visible_div("filaproducto11")
+                                                    }else{
+                                                        if(elemento12.style.display=='none'){
+                                                            visible_div("filaproducto12")
+                                                        }else{
+                                                            if(elemento13.style.display=='none'){
+                                                                visible_div("filaproducto13")
+                                                            }else{
+                                                                if(elemento14.style.display=='none'){
+                                                                    visible_div("filaproducto14")
+                                                                }else{
+                                                                    if(elemento15.style.display=='none'){
+                                                                        visible_div("filaproducto15")
+                                                                    }else{
+                                                                        alert("Limite de 15 productos por Factura \n Favor crea otra factura")
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                }
+            }
+        }
+    });
+    function esconde_div(id){
+       var elemento = document.getElementById(id);
+       elemento.style.display = 'none';
+    }
+
+    function visible_div(id){
+       var elemento = document.getElementById(id);
+       elemento.style.display = 'table-row';
+    }
+
+//Actualizar total
+
+    function ActualizaPrecio(id){
+        var precio=0.00;
+        var unidad=0;
+        var total=0.00
+        precio = $("#precio"+id).val();
+        unidad = $("#unidades"+id).val();
+        total=precio*unidad;
+        total=total.toFixed(2);
+        document.getElementById("total"+id).value=total;
+        ActualizaSubtotal();
+    }
+
+    function ActualizaSubtotal(){
+        var suma=0;
+        var num=0;
+        for (var i=1;i<16;i++){
+            num = $("#total"+i).val();
+            suma=parseFloat(suma)+parseFloat(num);
+
+            }
+            suma=suma.toFixed(2);
+       document.getElementById("subtotal").value=suma;
+      ActualizaTotal();
+
+    }
+
+    function ActualizaTotal(){
+        var suma=0.00;
+        var subtotal=$("#subtotal").val();
+        subtotal=parseFloat(subtotal).toFixed(2);
+        document.getElementById("total").value=subtotal;
+    }
+
+//VALIDAR FORM
+
+    function validacion(){
+        var numerofactura=$("#numero").val();
+        var vendedor = document.getElementById("vendedor").selectedIndex;
+        var factura = document.getElementById("factura").selectedIndex;
+        var cliente = document.getElementById("nombre").selectedIndex;
+        var precio = document.getElementById("precio1").selectedIndex;
+        if(numerofactura==""){
+            alert('Error message: '+"Favor ingresar correctamente el numero de la Nota de Credito");
+            $("form:not(.filter) :input:visible:enabled:first").focus();
+            return false;
+        }
+        if( vendedor == null || vendedor == 0 ) {
+            alert('Error message: '+"Favor seleccionar un vendedor");
+
+             return false;
+        }
+        if( precio == "" ) {
+            alert('Error message: '+"Favor Seleccione un Precio del Producto");
+
+             return false;
+        }
+         if( cliente == null || cliente == 0 ) {
+            alert('Error message: '+"Favor Seleccione un cliente ");
+
+             return false;
+        }
+         if( factura == null || factura == 0 ) {
+            alert('Error message: '+"Favor Seleccione una Factura");
+
+             return false;
+        }
+    }
+
+</script>
+
+        {% endblock %}
+        {% block style_scripts %}
+        .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+                border: 1px solid #E6E6E6;
+                background: #FDFDFD;
+                font-weight: normal;
+                color: rgb(151, 151, 151);
+            }
+            .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight{
+                border: 1px solid #799DC4;
+                background: #FDFDFD;
+                font-weight: normal;
+                color: rgb(151, 151, 151);
+             }
+            .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+                border: 1px solid #799DC4;
+                background: #799DC4;
+                color: #FFFFFF;
+            }
+            .fila-base{ display: none; } /* fila base oculta */
+        {% endblock %}
