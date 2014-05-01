@@ -16,13 +16,13 @@ class bodega(models.Model):
 	encargado = models.ForeignKey(Empleado,unique = True)
 	
 	def __unicode__(self):
-		return '%s - %s' % (self.codigo, self.nombre)
+		return '%s | %s %s' % (self.nombre, self.encargado.p_nombre, self.encargado.p_apellido)
         
 	def clean(self):
         # NO guardar empleado que no sea vendedor
 		if self.encargado.tipo != 'Vendedor':
 			raise ValidationError('Asegúrese que el empleado sea un vendedor.')
-			
+ 			
 	def delete(self, *args, **kwargs):
         # Evitar que se borre la bodega principal
 		if self.pk == 1 :
@@ -63,6 +63,7 @@ class compra(models.Model):
 	orden_compra = models.AutoField(primary_key=True)
 	proveedor = models.ForeignKey(Proveedor,related_name='compra_proveedor')
 	fecha = models.DateField(null = False)
+	#total_compra
 	
 	fecha_creacion = models.DateTimeField(auto_now_add = True,null = False)
 	usuario_creador = models.ForeignKey(User)

@@ -19,8 +19,9 @@ admin.site.register(NotaCredito)
 admin.site.register(ProductosNota)
 admin.site.register(NotaCreditoProductosNota)
 
-class CompraProductInline(admin.StackedInline):
+class CompraProductInline(admin.TabularInline):
     model = compra_producto
+    extra = 1
 
 class CompraAdmin(admin.ModelAdmin):
 	list_display = ['orden_compra', 'proveedor','fecha']
