@@ -29,13 +29,17 @@ class bodega(models.Model):
 			raise ValidationError("NO se puede eliminar la bodega principal")
 			
 def get_bodega_principal():
-	return bodega.objects.get(pk=1)
+	b = bodega.objects.filter(pk=1)
+	if b:
+		return b[0]
+	else:
+		return None
 	
 class producto_bodega(models.Model):
 	producto = models.ForeignKey(Producto)
-	bodega = models.ForeignKey(bodega, default = get_bodega_principal )
+	bodega = models.ForeignKey(bodega, default = get_bodega_principal)
 	cantidad = models.IntegerField(blank = False,null = False)
-	#transaccion = models.IntegerField  para saber si esta añadiendo o modificando la cantidad
+	transaccion = models.IntegerField(default = 3) # para saber si esta añadiendo o modificando la cantidad, 0 es restar, 1 sumar, 3 se reemplaza
 	
 	class Meta:
 		unique_together = ("producto","bodega")
@@ -45,7 +49,12 @@ class producto_bodega(models.Model):
 		pb = producto_bodega.objects.filter(producto = self.producto, bodega = self.bodega)
 		#incluir validacion de transaccion
 		if pb:
-			pb.update(cantidad = pb[0].cantidad + self.cantidad)
+			if self.transaccion == 1:
+				pb.update(cantidad = pb[0].cantidad + self.cantidad)
+			if self.transaccion == 0:
+				pb.update(cantidad = pb[0].cantidad - self.cantidad)
+			if self.transaccion == 3:
+				pb.update(cantidad = self.cantidad)
 		else:
 			super(producto_bodega, self).save(*args, **kwargs)
 
@@ -71,7 +80,7 @@ class compra_producto(models.Model):
         #Alimentar inventario de bodega principal
 		producto = self.producto
 		cantidad = self.cantidad
-		producto_bodega.objects.create(producto = producto,cantidad = cantidad)
+		producto_bodega.objects.create(producto = producto,cantidad = cantidad,transaccion = 1)
 
 		super(compra_producto, self).save(*args, **kwargs)
 
@@ -113,7 +122,7 @@ class producto_transferencia(models.Model):
 			pb_destino.update(cantidad = pb_destino[0].cantidad + self.cantidad)
 			self.total_destino = pb_destino[0].cantidad
 		else:
-			producto_bodega.objects.create(producto = producto,bodega = bodega_destino, cantidad = cantidad)
+			producto_bodega.objects.create(producto = producto,bodega = bodega_destino, cantidad = cantidad, transaccion = 1)
 			self.total_destino = cantidad
 		
 		self.total_origen = pb_origen[0].cantidad

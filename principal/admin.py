@@ -39,21 +39,21 @@ class transferenciaAdmin(admin.ModelAdmin):
 		
 class BodegaProductInline(admin.StackedInline):
     model = producto_bodega
-
+		
 class BodegaAdmin(admin.ModelAdmin):
-	#list_display = ['orden_compra', 'proveedor','fecha']
-	list_select_related = True
+	#list_display = ('producto', 'cantidad')
 	inlines = [BodegaProductInline]
-	#filter_horizontal = ('producto',)
 
 	def get_form(self, request, obj=None, **kwargs):
+		print obj
 		if obj == None:
-			self.exclude = ("producto",'bodega', )
+			self.exclude = ('producto','cantidad','transaccion')
 		form = super(BodegaAdmin, self).get_form(request, obj, **kwargs)
 		return form
     
 admin.site.register(compra,CompraAdmin)
 admin.site.register(bodega, BodegaAdmin)
+#admin.site.register(bodega)
 admin.site.register(producto_transferencia,transferenciaAdmin)
 
     
