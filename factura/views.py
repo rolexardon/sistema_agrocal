@@ -11,6 +11,7 @@ from django.shortcuts import render
 from empleados.models import Empleado
 from producto.models import Producto,PromocionProducto
 from clientes.models import Cliente
+from inventario.models import bodega, producto_bodega
 
 def get_ajax(request):
     import json
@@ -192,7 +193,8 @@ def factura_crear(request):
         ddic['total15'] = request.POST.get('total15')
 
         listaproductos=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-        #validar si bodega tiene suficiente
+        
+			
         """for x in listaproductos:
             for y in ddic['productos']:
                 if y.nombre == ddic['producto'+str(x)]:
@@ -210,20 +212,18 @@ def factura_crear(request):
                 if ddic['producto'+str(x)] !=  "SIN NOMBRE":
                     for y in ddic['productos']:
                         if y.nombre == ddic['producto'+str(x)]:
-
-							#aqui va desconteo
-
-                            y.cantidad=y.cantidad-int(ddic['unidades'+str(x)])
-                            y.save()
-
-                            #y.cantidad=y.cantidad-int(ddic['unidades'+str(x)])
-                            #y.save()
-
-                            empleado = ddic['vendedor']
-                            producto = y
-
 							
-
+							#validar si bodega tiene suficiente
+							try:
+								bodega = bodega.objects.get(encargado = ddic['vendedor'])
+								cantidad = producto_bodega.objects.get(bodega = bodega, producto = y).cantidad
+								if ddic['unidades'+str(x)] > cantidad:
+									 ddic['error'] = {'message':'La bodega no contiene suficientes unidades del producto %s' % (y.nombre)}
+							except Exception,e:
+								ddic['error'] = {'message':'Se han detectado errores %s' % (e)}
+							else:
+								#aqui va desconteo
+								producto_bodega.objects.create(producto = y, bodega = bodega, cantidad = ddic['unidades'+str(x)],transaccion = 0)
 
                     productofactura1=Productos.objects.create(nombreProducto=ddic['producto'+str(x)],unidades=ddic['unidades'+str(x)],precio=ddic['precio'+str(x)],descuento=0,fecha=ddic['fecha'],total=ddic['total'+str(x)])
                     ProductosFactura.objects.create(id_factura=facturas,id_producto=productofactura1)
