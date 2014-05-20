@@ -63,10 +63,13 @@ class compra(models.Model):
 	orden_compra = models.AutoField(primary_key=True)
 	proveedor = models.ForeignKey(Proveedor,related_name='compra_proveedor')
 	fecha = models.DateField(null = False)
-	#total_compra
-	
+	total_compra = models.DecimalField(max_digits=12, decimal_places=2,blank = False,null = False)
+	pagada = models.BooleanField(null = False)
 	fecha_creacion = models.DateTimeField(auto_now_add = True,null = False)
 	usuario_creador = models.ForeignKey(User)
+	
+	def __str__(self):
+		return str(self.orden_compra)
 	
 class compra_producto(models.Model):
 	compra = models.ForeignKey(compra)
@@ -82,6 +85,15 @@ class compra_producto(models.Model):
 		producto = self.producto
 		cantidad = self.cantidad
 		producto_bodega.objects.create(producto = producto,cantidad = cantidad,transaccion = 1)
+		
+		#compra = self.compra
+		
+		#total = compra.total_compra
+		#total = total + cantidad
+		
+		
+		#compra.total_compra = total_compra
+		#compra.save()
 
 		super(compra_producto, self).save(*args, **kwargs)
 

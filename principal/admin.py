@@ -30,9 +30,21 @@ class CompraProductInline(admin.TabularInline):
     extra = 1
 
 class CompraAdmin(admin.ModelAdmin):
-	list_display = ['orden_compra', 'proveedor','fecha']
+	list_display = ['orden_compra']
+	readonly_fields = ['orden_compra_display']
+	
 	list_select_related = True
 	inlines = [CompraProductInline]
+	
+	def orden_compra_display(self, obj):
+		if obj.orden_compra is None:
+			a = compra.objects.all().order_by('-orden_compra')[:1]
+			if a:
+				return a[0].a + 1
+			else:
+				return 0
+		else:
+			return obj.orden_compra
     #filter_horizontal = ('producto',)
 
 class transferenciaAdmin(admin.ModelAdmin):
