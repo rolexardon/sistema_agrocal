@@ -20,16 +20,13 @@ class Producto(models.Model):
     precio_venta_min=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Minimo')
     precio_venta_med=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Medio')
     precio_venta_max=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Maximo')
-    #cantidad = models.IntegerField(verbose_name=u'Cantidad:')
     descripcion=models.TextField(max_length='250', verbose_name=u'Descripción Producto:')
     proveedor=models.ForeignKey(Proveedor)
 
     precio_venta_min=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Minimo')
     precio_venta_med=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Medio')
     precio_venta_max=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Maximo')
-    #cantidad = models.IntegerField(verbose_name=u'Cantidad:')
     descripcion=models.TextField(max_length='250', verbose_name=u'Descripción Producto:')
-    #proveedor=models.ForeignKey(Proveedor)
 
     habilitado = models.CharField(max_length='2', verbose_name=u'Habilitado :', choices = ESTADO)
     usuario_creador = models.ForeignKey(User)

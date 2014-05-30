@@ -30,22 +30,24 @@ class CompraProductInline(admin.TabularInline):
     extra = 1
 
 class CompraAdmin(admin.ModelAdmin):
+	readonly_fields = ['numero_compra','total_compra','subtotal_compra']
 	list_display = ['orden_compra']
-	readonly_fields = ['orden_compra_display']
 	
 	list_select_related = True
 	inlines = [CompraProductInline]
 	
-	def orden_compra_display(self, obj):
+	def numero_compra(self, obj):
 		if obj.orden_compra is None:
 			a = compra.objects.all().order_by('-orden_compra')[:1]
 			if a:
 				return a[0].a + 1
 			else:
-				return 0
+				return 1
 		else:
 			return obj.orden_compra
     #filter_horizontal = ('producto',)
+    
+
 
 class transferenciaAdmin(admin.ModelAdmin):
     list_display = ('producto','cantidad','bodega_origen','bodega_destino','fecha_creacion','usuario_creador','total_origen','total_destino')
@@ -82,6 +84,8 @@ class BodegaAdmin(admin.ModelAdmin):
 			print '02', self
 			return ()
 	"""	
+        
+        
 admin.site.register(compra,CompraAdmin)
 admin.site.register(bodega, BodegaAdmin)
 #admin.site.register(bodega)
