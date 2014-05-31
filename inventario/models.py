@@ -83,7 +83,6 @@ class compra(models.Model):
 		super(compra, self).save(*args, **kwargs)
 		
 		
-	
 class compra_producto(models.Model):
 	compra = models.ForeignKey(compra)
 	producto = models.ForeignKey(Producto)
