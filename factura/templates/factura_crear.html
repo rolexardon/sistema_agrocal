@@ -120,7 +120,7 @@
                                         <select id="vendedor" type="text" class="form-control" placeholder="Nombre Vendedor" name="vendedor">
                                             <option value="SIN NOMBRE">Seleccione un Empleado</option>
                                             {% for emp in empleados %}
-                                                <option value={{emp.p_nombre}}{{emp.p_apellido}}>{{emp.p_nombre}} {{emp.p_apellido}}</option>
+                                                <option value={{emp.pk}}>{{emp.p_nombre}} {{emp.p_apellido}}</option>
                                             {%endfor%}
                                         </select>
                                     </td>

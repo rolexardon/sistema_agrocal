@@ -58,7 +58,7 @@ class producto_bodega(models.Model):
 
 		
 class compra(models.Model):
-	orden_compra = models.AutoField(primary_key=True)
+	orden_compra = models.CharField(max_length='20',unique = True,blank=False,null=False)
 	proveedor = models.ForeignKey(Proveedor,related_name='compra_proveedor')
 	fecha = models.DateField(null = False)
 	pagada = models.BooleanField(null = False, verbose_name = "Ya está Pagada?")

@@ -206,7 +206,6 @@ def factura_crear(request):
             return render_to_response('factura_crear.html',ddic,context_instance=RequestContext(request))
         else:
 
-            facturas=Factura.objects.create(numero=ddic['numero'],fecha_creacion=ddic['fecha'],nombre=ddic['nombre'],vendedor=ddic['vendedor'],tipo=ddic['tipo'],subtotal=ddic['subtotal'],impuestoaplicado=ddic['impuesto'],comentario=ddic['comentario'],descuentoaplicado=ddic['descuento'],total=Decimal('%.2f' % float(ddic['total'])))
 
             for x in listaproductos:
                 if ddic['producto'+str(x)] !=  "SIN NOMBRE":
@@ -214,21 +213,28 @@ def factura_crear(request):
                         if y.nombre == ddic['producto'+str(x)]:
 							
 							#validar si bodega tiene suficiente
+							
 							try:
-								bodega = bodega.objects.get(encargado = ddic['vendedor'])
-								cantidad = producto_bodega.objects.get(bodega = bodega, producto = y).cantidad
-								if ddic['unidades'+str(x)] > cantidad:
+								bdg = bodega.objects.get(encargado__pk= int(ddic['vendedor']))
+								cantidad = producto_bodega.objects.get(bodega = bdg, producto = y).cantidad
+								if int(ddic['unidades'+str(x)]) > cantidad:
 									 ddic['error'] = {'message':'La bodega no contiene suficientes unidades del producto %s' % (y.nombre)}
+									 errores.append('La bodega no contiene suficientes unidades del producto %s' % (y.nombre))
 							except Exception,e:
 								ddic['error'] = {'message':'Se han detectado errores %s' % (e)}
-							else:
-								#aqui va desconteo
-								producto_bodega.objects.create(producto = y, bodega = bodega, cantidad = ddic['unidades'+str(x)],transaccion = 0)
-
-                    productofactura1=Productos.objects.create(nombreProducto=ddic['producto'+str(x)],unidades=ddic['unidades'+str(x)],precio=ddic['precio'+str(x)],descuento=0,fecha=ddic['fecha'],total=ddic['total'+str(x)])
-                    ProductosFactura.objects.create(id_factura=facturas,id_producto=productofactura1)
+								errores.append("Se han detectado errores")
+							
 
 
+
+        if errores:
+            ddic['error'] = {'message':'Se han detectado errores %s' % (errores)}
+            return render_to_response('factura_crear.html',ddic,context_instance=RequestContext(request))
+        else:
+            facturas=Factura.objects.create(numero=ddic['numero'],fecha_creacion=ddic['fecha'],nombre=ddic['nombre'],vendedor=ddic['vendedor'],tipo=ddic['tipo'],subtotal=ddic['subtotal'],impuestoaplicado=ddic['impuesto'],comentario=ddic['comentario'],descuentoaplicado=ddic['descuento'],total=Decimal('%.2f' % float(ddic['total'])))
+            producto_bodega.objects.create(producto = y, bodega = bdg, cantidad = int(ddic['unidades'+str(x)]),transaccion = 0)
+            productofactura1=Productos.objects.create(nombreProducto=ddic['producto'+str(x)],unidades=ddic['unidades'+str(x)],precio=ddic['precio'+str(x)],descuento=0,fecha=ddic['fecha'],total=ddic['total'+str(x)])
+            ProductosFactura.objects.create(id_factura=facturas,id_producto=productofactura1)
             ddic['success'] = {'message':u'Se ingreso con exito la información.'}
             return render_to_response('factura_crear.html',ddic, context_instance=RequestContext(request))
 

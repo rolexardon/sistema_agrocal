@@ -57,7 +57,8 @@ class CompraProductInline(admin.TabularInline):
     extra = 1
 
 class CompraAdmin(admin.ModelAdmin):
-	readonly_fields = ['numero_compra','total_compra','subtotal_compra']
+	#readonly_fields = ['numero_compra','total_compra','subtotal_compra']
+	readonly_fields = ['subtotal_compra','total_compra']
 	list_display = ['orden_compra']
 	
 	list_select_related = True
