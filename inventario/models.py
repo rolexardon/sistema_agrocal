@@ -88,6 +88,7 @@ class compra_producto(models.Model):
 	producto = models.ForeignKey(Producto)
 	cantidad = models.IntegerField(blank = False,null = False)
 	costo = models.DecimalField(max_digits=12, decimal_places=2,blank = False,null = False)
+	subtotal_cp = models.DecimalField(max_digits=12, decimal_places=2,blank = False,null = False, verbose_name = "SubTotal",default = 0)
 	
 	class Meta:
 		unique_together = ("compra", "producto")
@@ -114,9 +115,10 @@ class compra_producto(models.Model):
 			subtotal_original = cp[0].cantidad * cp[0].costo
 			subtotal = subtotal - subtotal_original
 			
-		
-		subtotal = subtotal + (cantidad * costo)
+		this_subtotal = (cantidad * costo)
+		subtotal = subtotal + this_subtotal
 		compra.subtotal_compra = subtotal
+		self.subtotal_cp = this_subtotal
 		compra.save()
 		
 		super(compra_producto, self).save(*args, **kwargs)
