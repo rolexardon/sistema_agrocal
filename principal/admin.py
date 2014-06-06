@@ -12,9 +12,9 @@ admin.site.unregister(User)
 admin.site.register(PromocionProducto)
 admin.site.register(Proveedor)
 admin.site.register(Factura)
-admin.site.register(ProductosFactura)
+#admin.site.register(ProductosFactura)
 admin.site.register(Impuesto)
-admin.site.register(Productos)
+#admin.site.register(Productos)
 admin.site.register(NotaCredito)
 admin.site.register(ProductosNota)
 admin.site.register(NotaCreditoProductosNota)
@@ -22,7 +22,7 @@ admin.site.register(NotaCreditoProductosNota)
 class EmpleadoInline(admin.StackedInline):
     model = Empleado
     max_num = 1
-    
+
 
 class EmpleadoAdmin(admin.ModelAdmin):
 	inlines = [EmpleadoInline]
@@ -115,8 +115,8 @@ class BodegaAdmin(admin.ModelAdmin):
 			print '02', self
 			return ()
 	"""	
-        
-        
+
+
 admin.site.register(compra,CompraAdmin)
 admin.site.register(bodega, BodegaAdmin)
 admin.site.register(Cliente, ClienteAdmin)
