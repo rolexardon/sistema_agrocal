@@ -6,14 +6,10 @@ from django.http import HttpResponse
 
 from django.shortcuts import render
 from proveedores.models import Proveedor
-<<<<<<< HEAD
 from empleados.models import Empleado
 from producto.models import Producto,PromocionProducto
 from clientes.models import Cliente
 from factura.models import NotaDebito,Factura,Impuesto,Productos,ProductosFactura,NotaCredito,ProductosNota,NotaCreditoProductosNota,NotaDebito
-
-=======
->>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
 
 
 def gestion_proveedor(request):
@@ -36,7 +32,6 @@ def busca_proveedor(request):
         return render_to_response('account_login.html',ddic,context_instance=RequestContext(request))
     nombre = request.GET['nombre']
     ddic['proveedor'] = Proveedor.objects.filter(nombre__contains=nombre,habilitado='SI')
-<<<<<<< HEAD
     return render_to_response('proveedores_main.html',ddic,context_instance=RequestContext(request))
 
 def ingreso_crear(request):
@@ -166,6 +161,6 @@ def ingreso_crear(request):
 
             ddic['success'] = {'message':u'Se ingreso con exito la información.'}
             return render_to_response('ingreso_crear.html',ddic, context_instance=RequestContext(request))
-=======
+
     return render_to_response('proveedores_main.html',ddic,context_instance=RequestContext(request))
->>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
+

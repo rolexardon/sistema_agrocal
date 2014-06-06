@@ -101,11 +101,7 @@
                                 <tr>
                                     <td colspan="2" style="width:50%;">
                                         <b>NOMBRE:</b>
-<<<<<<< HEAD
                                         <select type="text" class="form-control" placeholder="Nombre Cliente" name="nombre" id="cliente">
-=======
-                                        <select type="text" class="form-control" placeholder="Nombre Cliente" name="nombre">
->>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6
                                             <option value="SIN NOMBRE" >Seleccione un Cliente</option>
                                             {% for cli in clientes %}
                                                 <option value="{{cli.nombre_cliente}}">{{cli.nombre_cliente}}</option>
@@ -815,17 +811,12 @@ function ObtenerValores(id){
 
                 producto: producto,
                 cliente:cliente,},
-            url:"{%url 'get_ajax' %}",
-            success:function(msg){
-                $.each(msg,	function(key,val){
-                    if(val.precio_pref>0) str+='<option value='+val.precio_pref+'>'+val.precio_pref+' Lps</option>';
 
-                producto: producto,},
             url:"{%url 'get_ajax' %}",
             success:function(msg){
                 $.each(msg,	function(key,val){
 
-
+if(val.precio_pref>0) str+='<option value='+val.precio_pref+'>'+val.precio_pref+' Lps</option>';
                     str+='<option value='+val.precio_min+'>'+val.precio_min+' Lps</option>';
                     str+='<option value='+val.precio_med+'>'+val.precio_med+' Lps</option>';
                     str+='<option value='+val.precio_max+'>'+val.precio_max+' Lps</option>';
