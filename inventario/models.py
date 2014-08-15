@@ -15,7 +15,7 @@ class bodega(models.Model):
 	
 	def __unicode__(self):
 		return '%s | %s %s' % (self.nombre, self.encargado.p_nombre, self.encargado.p_apellido)
-        
+
 	def clean(self):
         # NO guardar empleado que no sea vendedor
 		if self.encargado.tipo != 'Vendedor':
@@ -92,7 +92,7 @@ class compra_producto(models.Model):
 	
 	class Meta:
 		unique_together = ("compra", "producto")
-       
+
 	def save(self, *args, **kwargs):
         #Alimentar inventario de bodega principal
 		producto = self.producto
@@ -101,7 +101,7 @@ class compra_producto(models.Model):
 		
 		pb = producto_bodega.objects.filter(producto = producto)
 		if pb:
-			pb[0].cantidad = cantidad
+			pb[0].cantidad =pb[0].cantidad + cantidad
 			pb[0].transaccion = 2
 			pb[0].save()
 		else:
@@ -134,7 +134,7 @@ class producto_transferencia(models.Model):
 	
 	fecha_creacion = models.DateTimeField(auto_now_add = True,null = False)
 	usuario_creador = models.ForeignKey(User)
-    
+
 	def clean(self):
         #Validar que se pueda realizar transaccion
 		bodega_origen = self.bodega_origen
@@ -142,7 +142,7 @@ class producto_transferencia(models.Model):
 		cantidad = self.cantidad
 		
 		cantidad_pb = producto_bodega.objects.filter(bodega = bodega_origen,producto=producto)[0].cantidad
-		 
+
 		if cantidad_pb < cantidad:
 			raise ValidationError('NO existen suficientes elementos para realizar transferencia.')
 			

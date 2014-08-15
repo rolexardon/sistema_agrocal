@@ -14,20 +14,13 @@ class Producto(models.Model):
     imagen= models.ImageField(upload_to="imagen_productos/")
     codigo=models.CharField(max_length='125',verbose_name=u'Código :',unique=True)
     nombre= models.CharField(max_length='125', verbose_name=u'Nombre Producto:')
-    precio_costo=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Costo')
-
+    #precio_costo=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Costo')
     precio_preferencial=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Clientes Preferenciales')
     precio_venta_min=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Minimo')
     precio_venta_med=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Medio')
     precio_venta_max=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Maximo')
     descripcion=models.TextField(max_length='250', verbose_name=u'Descripción Producto:')
     proveedor=models.ForeignKey(Proveedor)
-
-    precio_venta_min=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Minimo')
-    precio_venta_med=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Medio')
-    precio_venta_max=models.DecimalField(max_digits=10,decimal_places=2,verbose_name=u'Precio Venta Maximo')
-    descripcion=models.TextField(max_length='250', verbose_name=u'Descripción Producto:')
-
     habilitado = models.CharField(max_length='2', verbose_name=u'Habilitado :', choices = ESTADO)
     usuario_creador = models.ForeignKey(User)
     fecha_creacion = models.DateTimeField(auto_now=True)

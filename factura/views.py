@@ -194,20 +194,7 @@ def factura_crear(request):
 
         listaproductos=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 
-			
-        """for x in listaproductos:
-            for y in ddic['productos']:
-                if y.nombre == ddic['producto'+str(x)]:
-                    if int(y.cantidad) < int(ddic['unidades'+str(x)]):
-                        errores.append("Las Unidades ("+ddic['unidades'+str(x)]+") facturadas del Producto: "+ddic['producto'+str(x)]+" son mayores a las existentes ("+ str(y.cantidad)+"), Favor ingrese nuevamente los datos")
-        """
-        if errores:
-            ddic['error'] = {'message':'Se han detectado errores %s' % (errores)}
-            return render_to_response('factura_crear.html',ddic,context_instance=RequestContext(request))
-        else:
-
-
-            for x in listaproductos:
+        for x in listaproductos:
                 if ddic['producto'+str(x)] !=  "SIN NOMBRE":
                     for y in ddic['productos']:
                         if y.nombre == ddic['producto'+str(x)]:
@@ -223,18 +210,27 @@ def factura_crear(request):
 							except Exception,e:
 								ddic['error'] = {'message':'Se han detectado errores %s' % (e)}
 								errores.append("Se han detectado errores")
-							
+		
 
-
-
+			
+        """for x in listaproductos:
+            for y in ddic['productos']:
+                if y.nombre == ddic['producto'+str(x)]:
+                    if int(y.cantidad) < int(ddic['unidades'+str(x)]):
+                        errores.append("Las Unidades ("+ddic['unidades'+str(x)]+") facturadas del Producto: "+ddic['producto'+str(x)]+" son mayores a las existentes ("+ str(y.cantidad)+"), Favor ingrese nuevamente los datos")
+        """
         if errores:
             ddic['error'] = {'message':'Se han detectado errores %s' % (errores)}
             return render_to_response('factura_crear.html',ddic,context_instance=RequestContext(request))
         else:
             facturas=Factura.objects.create(numero=ddic['numero'],fecha_creacion=ddic['fecha'],nombre=ddic['nombre'],vendedor=ddic['vendedor'],tipo=ddic['tipo'],subtotal=ddic['subtotal'],impuestoaplicado=ddic['impuesto'],comentario=ddic['comentario'],descuentoaplicado=ddic['descuento'],total=Decimal('%.2f' % float(ddic['total'])))
-            producto_bodega.objects.create(producto = y, bodega = bdg, cantidad = int(ddic['unidades'+str(x)]),transaccion = 0)
-            productofactura1=Productos.objects.create(nombreProducto=ddic['producto'+str(x)],unidades=ddic['unidades'+str(x)],precio=ddic['precio'+str(x)],descuento=0,fecha=ddic['fecha'],total=ddic['total'+str(x)])
-            ProductosFactura.objects.create(id_factura=facturas,id_producto=productofactura1)
+            for x in listaproductos:
+                if ddic['producto'+str(x)] !=  "SIN NOMBRE":
+                    for y in ddic['productos']:
+                        if y.nombre == ddic['producto'+str(x)]:
+                            producto_bodega.objects.create(producto = y, bodega = bdg, cantidad = int(ddic['unidades'+str(x)]),transaccion = 0)
+                            productofactura1=Productos.objects.create(nombreProducto=ddic['producto'+str(x)],unidades=ddic['unidades'+str(x)],precio=ddic['precio'+str(x)],descuento=0,fecha=ddic['fecha'],total=ddic['total'+str(x)])
+                            ProductosFactura.objects.create(id_factura=facturas,id_producto=productofactura1)
             ddic['success'] = {'message':u'Se ingreso con exito la información.'}
             return render_to_response('factura_crear.html',ddic, context_instance=RequestContext(request))
 

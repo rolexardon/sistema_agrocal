@@ -816,7 +816,7 @@ function ObtenerValores(id){
             success:function(msg){
                 $.each(msg,	function(key,val){
 
-if(val.precio_pref>0) str+='<option value='+val.precio_pref+'>'+val.precio_pref+' Lps</option>';
+if(val.precio_pref>0) str+='<option value='+val.precio_pref+'>'+val.precio_pref+' Lps (Preferencial)</option>';
                     str+='<option value='+val.precio_min+'>'+val.precio_min+' Lps</option>';
                     str+='<option value='+val.precio_med+'>'+val.precio_med+' Lps</option>';
                     str+='<option value='+val.precio_max+'>'+val.precio_max+' Lps</option>';

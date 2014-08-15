@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.db import models
-from empleados.models import Empleado
+from empleados.models import Empleado,Facturas
 from clientes.models import Cliente
 from producto.models import Producto,PromocionProducto
 from proveedores.models import Proveedor
@@ -18,6 +18,10 @@ admin.site.register(Impuesto)
 admin.site.register(NotaCredito)
 admin.site.register(ProductosNota)
 admin.site.register(NotaCreditoProductosNota)
+
+admin.site.register(Empleado)
+admin.site.register(Facturas)
+
 
 class EmpleadoInline(admin.StackedInline):
     model = Empleado
