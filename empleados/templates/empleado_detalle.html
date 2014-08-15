@@ -1,4 +1,16 @@
 {% extends "main.html" %}
+        {% block principal_menu %}
+            <li class="active">
+                <a href="{% url 'gestion_empleado' %}" class="dropdown-toggle" >
+                    Gestión Empleados
+                </a>
+            </li>
+            <li class="">
+                <a href="{% url 'gestion_talonarios' %}" class="dropdown-toggle" >
+                     Asignación Talonarios
+                </a>
+            </li>
+        {% endblock%}
         {% block header %}
             <div class="page-header">
                 <h1>Gesti&oacute;n Empleados <small></small></h1>
@@ -69,16 +81,25 @@
                                             <td>
                                                 <p><b>TELEFONO FIJO:</b> {{ empleado.t_fijo }}</p>
                                             </td>
-                                            <td>
+                                             <td>
                                                 <p><b>TELEFONO MOVIL:</b> {{ empleado.t_movil }}</p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <p><b>FECHA CREACION:</b> {{ empleado.fecha_creacion }}</p>
+                                                <p><b>USUARIO CREACION:</b> {{ empleado.usario_creador }}</p>
                                             </td>
                                             <td>
-                                                <p><b>USUARIO CREACION:</b> {{ empleado.usario_creador }}</p>
+                                                <p><b>FECHA CREACION:</b> {{ empleado.fecha_creacion }}</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td>
+                                                <p><b>FACTURAS ENTREGADAS:</b></p><p>{% for f in facturasusadas %}{{f.factura}},{%endfor%} </p>
+                                            </td>
+                                            <td >
+                                                <p><b>FACTURAS PENDIENTES:</b></p><p style="width: 300px;">{% for f in facturaspendientes %}{{f.factura}}, {%endfor%}</p>
                                             </td>
                                         </tr>
                                 </tbody>

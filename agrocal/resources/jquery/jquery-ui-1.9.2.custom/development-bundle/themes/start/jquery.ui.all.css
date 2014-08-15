@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*!
  * jQuery UI CSS Framework 1.9.2
  * http://jqueryui.com
@@ -11,17 +10,3 @@
  */
 @import "jquery.ui.base.css";
 @import "jquery.ui.theme.css";
-=======
-/*!
- * jQuery UI CSS Framework 1.9.2
- * http://jqueryui.com
- *
- * Copyright 2012 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- *
- * http://docs.jquery.com/UI/Theming
- */
-@import "jquery.ui.base.css";
-@import "jquery.ui.theme.css";
->>>>>>> 7c6f7ebb9828b38cdb02b715888e268a54ec46f6

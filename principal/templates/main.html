@@ -1,6 +1,7 @@
 {% extends "base.html" %}
         {% block content %}
             <div class="row">
+				{% if perms.empleados %}
                 <div class="col-sm-6 col-md-4">
                     <div class="thumbnail">
                         <a href="{% url 'gestion_empleado' %}" >
@@ -14,6 +15,8 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
+                {% if perms.proveedores %}
                 <div class="col-sm-6 col-md-4">
                     <div class="thumbnail">
                         <a href="{% url 'gestion_proveedor' %}" >
@@ -27,6 +30,8 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
+                {% if perms.clientes %}
                 <div class="col-sm-6 col-md-4">
                     <div class="thumbnail">
                         <a href="{% url 'gestion_cliente' %}" >
@@ -40,6 +45,8 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
+                {% if perms.inventario %}
                 <div class="col-sm-6 col-md-4">
                     <div class="thumbnail">
                         <a href="{% url 'gestion_producto' %}" >
@@ -53,6 +60,8 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
+                {% if perms.factura %}
                 <div class="col-sm-6 col-md-4">
                     <div class="thumbnail">
                         <a href="{% url 'factura_crear' %}" >
@@ -66,6 +75,8 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
+                {% if perms.reportes %}
                 <div class="col-sm-6 col-md-4">
                     <div class="thumbnail">
                         <a href="{% url 'gestion_reporte' %}" >
@@ -79,5 +90,6 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
              </div>
         {% endblock %}

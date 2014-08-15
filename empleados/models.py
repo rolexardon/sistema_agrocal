@@ -42,3 +42,14 @@ class Empleado(models.Model):
     def __unicode__(self):
         return '[ %s ] - %s %s' % (self.identidad, self.p_nombre, self.p_apellido)
 
+class Facturas(models.Model):
+    talonario=models.CharField(max_length='15', verbose_name=u'Número de Talonario :',unique=False)
+    factura=models.CharField(max_length='15', verbose_name=u'Número de Factura :',unique=False)
+    estado=models.CharField(max_length='3', verbose_name=u'estado :')
+    empleado=models.ForeignKey(Empleado)
+    def __unicode__(self):
+        return 'Factura:%s Empleado%s' % (self.factura,self.empleado)
+
+
+
+

@@ -43,4 +43,4 @@ class Cliente(models.Model):
     usuario_creador = models.ForeignKey(User, null=True, blank=True)
     fecha_creacion = models.DateTimeField(auto_now=True)
     def __unicode__(self):
-        return '[ %s ] - %s ' % (self.identidad, self.nombre_cliente)
+        return '[ %s ] - %s - PREFERENCIAL:%s' % (self.codigo, self.nombre_cliente,self.preferencial)

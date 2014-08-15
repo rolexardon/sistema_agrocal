@@ -1,4 +1,16 @@
 {% extends "main.html" %}
+        {% block principal_menu %}
+            <li class="active">
+                <a href="{% url 'gestion_empleado' %}" class="dropdown-toggle" >
+                    Gestión Empleados
+                </a>
+            </li>
+            <li class="">
+                <a href="{% url 'gestion_talonarios' %}" class="dropdown-toggle" >
+                     Asignación Talonarios
+                </a>
+            </li>
+        {% endblock%}
         {% block header %}
             <div class="page-header">
                 <h1>Gesti&oacute;n Empleado <small></small></h1>

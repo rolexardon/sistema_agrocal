@@ -11,6 +11,7 @@ from django.shortcuts import render
 from empleados.models import Empleado
 from producto.models import Producto,PromocionProducto
 from clientes.models import Cliente
+from inventario.models import bodega, producto_bodega
 
 def get_ajax(request):
     import json
@@ -23,22 +24,22 @@ def get_ajax(request):
 
                     if request.GET.get('producto','') and request.GET.get('producto','') != '0':
                         query['producto'] = request.GET.get('producto','')
-                    print(query['producto'])
+                    #print(query['producto'])
                     if request.GET.get('cliente','') and request.GET.get('producto','') != '0':
                         query['cliente'] = request.GET.get('cliente','')
-                    print(query['cliente'])
+
                     cli=Cliente.objects.all().filter(habilitado='SI',nombre_cliente=query['cliente'])
                     med = Producto.objects.all().filter(habilitado='SI',nombre=query['producto']).order_by('nombre')
                     print(cli)
                     for a in cli:
                         if a.preferencial=='SI':
-                            data = [{'pk':m.pk,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
-                        else:
+                            #data = [{'pk':m.pk,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
                             data = [{'pk':m.pk,'precio_pref': ' %s ' % (m.precio_preferencial) ,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
+                        else:
+                            data = [{'pk':m.pk,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
                     med = Producto.objects.all().filter(habilitado='SI',nombre=query['producto']).order_by('nombre')
-                    data = [{'pk':m.pk,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
-
-                    #print(data)
+                    #data = [{'pk':m.pk,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
+                    #data = [{'pk':m.pk,'precio_pref': ' %s ' % (m.precio_preferencial) ,'precio_min': ' %s ' % (m.precio_venta_min),'precio_med': ' %s ' % (m.precio_venta_med),'precio_max': ' %s ' % (m.precio_venta_max)} for m in med]
                     return HttpResponse(json.dumps(data), content_type="text/json")
                 except Exception, e:
                     print e
@@ -192,7 +193,26 @@ def factura_crear(request):
         ddic['total15'] = request.POST.get('total15')
 
         listaproductos=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-        #validar si bodega tiene suficiente
+
+        for x in listaproductos:
+                if ddic['producto'+str(x)] !=  "SIN NOMBRE":
+                    for y in ddic['productos']:
+                        if y.nombre == ddic['producto'+str(x)]:
+							
+							#validar si bodega tiene suficiente
+							
+							try:
+								bdg = bodega.objects.get(encargado__pk= int(ddic['vendedor']))
+								cantidad = producto_bodega.objects.get(bodega = bdg, producto = y).cantidad
+								if int(ddic['unidades'+str(x)]) > cantidad:
+									 ddic['error'] = {'message':'La bodega no contiene suficientes unidades del producto %s' % (y.nombre)}
+									 errores.append('La bodega no contiene suficientes unidades del producto %s' % (y.nombre))
+							except Exception,e:
+								ddic['error'] = {'message':'Se han detectado errores %s' % (e)}
+								errores.append("Se han detectado errores")
+		
+
+			
         """for x in listaproductos:
             for y in ddic['productos']:
                 if y.nombre == ddic['producto'+str(x)]:
@@ -203,32 +223,14 @@ def factura_crear(request):
             ddic['error'] = {'message':'Se han detectado errores %s' % (errores)}
             return render_to_response('factura_crear.html',ddic,context_instance=RequestContext(request))
         else:
-
             facturas=Factura.objects.create(numero=ddic['numero'],fecha_creacion=ddic['fecha'],nombre=ddic['nombre'],vendedor=ddic['vendedor'],tipo=ddic['tipo'],subtotal=ddic['subtotal'],impuestoaplicado=ddic['impuesto'],comentario=ddic['comentario'],descuentoaplicado=ddic['descuento'],total=Decimal('%.2f' % float(ddic['total'])))
-
             for x in listaproductos:
                 if ddic['producto'+str(x)] !=  "SIN NOMBRE":
                     for y in ddic['productos']:
                         if y.nombre == ddic['producto'+str(x)]:
-
-							#aqui va desconteo
-
-                            y.cantidad=y.cantidad-int(ddic['unidades'+str(x)])
-                            y.save()
-
-                            #y.cantidad=y.cantidad-int(ddic['unidades'+str(x)])
-                            #y.save()
-
-                            empleado = ddic['vendedor']
-                            producto = y
-
-							
-
-
-                    productofactura1=Productos.objects.create(nombreProducto=ddic['producto'+str(x)],unidades=ddic['unidades'+str(x)],precio=ddic['precio'+str(x)],descuento=0,fecha=ddic['fecha'],total=ddic['total'+str(x)])
-                    ProductosFactura.objects.create(id_factura=facturas,id_producto=productofactura1)
-
-
+                            producto_bodega.objects.create(producto = y, bodega = bdg, cantidad = int(ddic['unidades'+str(x)]),transaccion = 0)
+                            productofactura1=Productos.objects.create(nombreProducto=ddic['producto'+str(x)],unidades=ddic['unidades'+str(x)],precio=ddic['precio'+str(x)],descuento=0,fecha=ddic['fecha'],total=ddic['total'+str(x)])
+                            ProductosFactura.objects.create(id_factura=facturas,id_producto=productofactura1)
             ddic['success'] = {'message':u'Se ingreso con exito la información.'}
             return render_to_response('factura_crear.html',ddic, context_instance=RequestContext(request))
 

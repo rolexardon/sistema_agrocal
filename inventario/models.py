@@ -7,8 +7,6 @@ from empleados.models import Empleado
 from proveedores.models import Proveedor
 from producto.models import Producto
 
-
-	
 class bodega(models.Model):
 	codigo = models.CharField(max_length='20',unique = True,blank=False,null=False)
 	nombre = models.CharField(max_length='50',blank = False,null = False)
@@ -17,7 +15,7 @@ class bodega(models.Model):
 	
 	def __unicode__(self):
 		return '%s | %s %s' % (self.nombre, self.encargado.p_nombre, self.encargado.p_apellido)
-        
+
 	def clean(self):
         # NO guardar empleado que no sea vendedor
 		if self.encargado.tipo != 'Vendedor':
@@ -60,29 +58,69 @@ class producto_bodega(models.Model):
 
 		
 class compra(models.Model):
-	orden_compra = models.AutoField(primary_key=True)
+	orden_compra = models.CharField(max_length='20',unique = True,blank=False,null=False)
 	proveedor = models.ForeignKey(Proveedor,related_name='compra_proveedor')
 	fecha = models.DateField(null = False)
-	#total_compra
-	
+	pagada = models.BooleanField(null = False, verbose_name = "Ya está Pagada?")
 	fecha_creacion = models.DateTimeField(auto_now_add = True,null = False)
 	usuario_creador = models.ForeignKey(User)
+	costo_flete = models.DecimalField(max_digits=12, decimal_places=2,blank = False,null = False,default = 0)
+	subtotal_compra = models.DecimalField(max_digits=12, decimal_places=2,blank = False,null = False, verbose_name = "SubTotal",default = 0)
+	total_compra = models.DecimalField(max_digits=12, decimal_places=2,blank = False,null = False, verbose_name = "Total",default = 0)
 	
+	def __str__(self):
+		return str("Orden de compra #%s Fecha %s" % (self.orden_compra,self.fecha))
+		
+	def save(self, *args, **kwargs):
+		costo_flete = self.costo_flete
+		subtotal = self.subtotal_compra
+		total = self.total_compra
+			
+		total = costo_flete + subtotal
+		self.total_compra = total
+		#self.subtotal_compra = 0
+		
+		super(compra, self).save(*args, **kwargs)
+		
+		
 class compra_producto(models.Model):
 	compra = models.ForeignKey(compra)
 	producto = models.ForeignKey(Producto)
 	cantidad = models.IntegerField(blank = False,null = False)
 	costo = models.DecimalField(max_digits=12, decimal_places=2,blank = False,null = False)
+	subtotal_cp = models.DecimalField(max_digits=12, decimal_places=2,blank = False,null = False, verbose_name = "SubTotal",default = 0)
 	
 	class Meta:
 		unique_together = ("compra", "producto")
-       
+
 	def save(self, *args, **kwargs):
         #Alimentar inventario de bodega principal
 		producto = self.producto
 		cantidad = self.cantidad
-		producto_bodega.objects.create(producto = producto,cantidad = cantidad,transaccion = 1)
-
+		costo = self.costo
+		
+		pb = producto_bodega.objects.filter(producto = producto)
+		if pb:
+			pb[0].cantidad =pb[0].cantidad + cantidad
+			pb[0].transaccion = 2
+			pb[0].save()
+		else:
+			producto_bodega.objects.create(producto = producto, cantidad = cantidad,transaccion = 1)
+		
+		compra = self.compra	
+		subtotal = compra.subtotal_compra
+		cp = compra_producto.objects.filter(compra = compra, producto = producto)
+		
+		if cp:
+			subtotal_original = cp[0].cantidad * cp[0].costo
+			subtotal = subtotal - subtotal_original
+			
+		this_subtotal = (cantidad * costo)
+		subtotal = subtotal + this_subtotal
+		compra.subtotal_compra = subtotal
+		self.subtotal_cp = this_subtotal
+		compra.save()
+		
 		super(compra_producto, self).save(*args, **kwargs)
 
 	
@@ -96,7 +134,7 @@ class producto_transferencia(models.Model):
 	
 	fecha_creacion = models.DateTimeField(auto_now_add = True,null = False)
 	usuario_creador = models.ForeignKey(User)
-    
+
 	def clean(self):
         #Validar que se pueda realizar transaccion
 		bodega_origen = self.bodega_origen
@@ -104,7 +142,7 @@ class producto_transferencia(models.Model):
 		cantidad = self.cantidad
 		
 		cantidad_pb = producto_bodega.objects.filter(bodega = bodega_origen,producto=producto)[0].cantidad
-		 
+
 		if cantidad_pb < cantidad:
 			raise ValidationError('NO existen suficientes elementos para realizar transferencia.')
 			
