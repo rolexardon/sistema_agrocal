@@ -12,7 +12,7 @@ def gestion_proveedor(request):
     ddic = {}
     if not request.user.is_authenticated():
         return render_to_response('account_login.html',ddic,context_instance=RequestContext(request))
-    ddic['proveedor'] = Proveedor.objects.all().filter(habilitado='SI').order_by('nombre')
+    ddic['proveedor'] = Proveedor.objects.filter(habilitado='SI').order_by('nombre')
     return render_to_response('proveedores_main.html',ddic,context_instance=RequestContext(request))
 
 def detalle_proveedor(request,mod_id=None):
